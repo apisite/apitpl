@@ -13,7 +13,7 @@ import (
 )
 
 // Here we demonstrate loading a set of templates from a directory.
-func ExampleRenderHTTP() {
+func Example_http() {
 
 	cfg := lookupfs.Config{
 		Includes:  "includes",

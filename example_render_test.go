@@ -22,7 +22,7 @@ func (p *Page) SetTitle(name string) (string, error) {
 }
 
 // Here we demonstrate loading a set of templates from a directory.
-func ExampleRenderResponse() {
+func Example() {
 
 	cfg := lookupfs.Config{
 		Includes:  "includes",
