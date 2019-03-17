@@ -43,7 +43,7 @@ func createTestDir(ext string, files []templateFile) string {
 }
 
 // Here we demonstrate loading a set of templates from a directory.
-func ExampleLookupFilesByPrefix() {
+func Example_lookupByPrefix() {
 
 	cfg := Config{
 		Includes: "includes",
@@ -82,7 +82,7 @@ func ExampleLookupFilesByPrefix() {
 }
 
 // Here we demonstrate loading a set of templates from a directory.
-func ExampleLookupFilesBySuffix() {
+func Example_lookupBySuffix() {
 
 	cfg := Config{
 		Includes:  ".includes",
