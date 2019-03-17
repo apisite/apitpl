@@ -14,7 +14,7 @@
 [gd2]: https://godoc.org/github.com/apisite/tpl2x
 [gc1]: https://goreportcard.com/badge/apisite/tpl2x
 [gc2]: https://goreportcard.com/report/github.com/apisite/tpl2x
-[gr1]: https://img.shields.io/github/release/apisite/tpl2x.svg
+[gr1]: https://img.shields.io/github/release-pre/apisite/tpl2x.svg
 [gr2]: https://github.com/apisite/tpl2x/releases
 [sz]: https://img.shields.io/github/languages/code-size/apisite/tpl2x.svg
 [gl1]: https://img.shields.io/github/license/apisite/tpl2x.svg
@@ -109,18 +109,9 @@ in templates
 {{end -}}
 
 ```
-## TODO
-
-* [ ] docs, part 1
-* [ ] tests, part 1
-* [ ] google and ask reddit for analogs
-* [ ] tests, part 2
-* [ ] docs, part 2
-* [ ] release
 
 ## License
 
 The MIT License (MIT), see [LICENSE](LICENSE).
 
 Copyright (c) 2018 Aleksei Kovrizhkin <lekovr+apisite@gmail.com>
-
