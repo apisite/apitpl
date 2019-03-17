@@ -1,4 +1,4 @@
-// Package tpl2x templates executed twice, for content and for layout
+// Package tpl2x renders templates by execiting them twice, one for content and one for layout
 package tpl2x
 
 import (

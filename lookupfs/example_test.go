@@ -42,7 +42,7 @@ func createTestDir(ext string, files []templateFile) string {
 	return dir
 }
 
-// Here we demonstrate loading a set of templates from a directory.
+// Lookup filesystem for templates separated by directory
 func Example_lookupByPrefix() {
 
 	cfg := Config{
@@ -81,7 +81,7 @@ func Example_lookupByPrefix() {
 	// pages: [page subdir3/page]
 }
 
-// Here we demonstrate loading a set of templates from a directory.
+// Lookup filesystem for templates separated by filename suffix
 func Example_lookupBySuffix() {
 
 	cfg := Config{

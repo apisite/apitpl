@@ -1,3 +1,4 @@
+// Package gintpl2x - tpl2x bindings for gin
 package gintpl2x
 
 // https://stackoverflow.com/questions/42747183/how-to-render-templates-to-multiple-layouts-in-go
