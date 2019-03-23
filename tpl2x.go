@@ -60,7 +60,7 @@ func (tfs *TemplateService) Funcs(funcMap template.FuncMap) *TemplateService {
 }
 
 // PageNames returns page names for router setup
-func (tfs *TemplateService) PageNames() []string {
+func (tfs TemplateService) PageNames() []string {
 	return tfs.lfs.PageNames()
 }
 

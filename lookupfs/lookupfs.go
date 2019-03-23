@@ -38,7 +38,7 @@ func (fs defaultFS) Open(name string) (http.File, error) {
 	return f, nil
 }
 
-// FileSystem is an interface for filesystem
+// FileSystem holds all of used filesystem access methods
 type FileSystem interface {
 	Walk(root string, walkFn filepath.WalkFunc) error
 	Open(name string) (http.File, error)
@@ -79,7 +79,7 @@ func (lfs *LookupFileSystem) FileSystem(fs FileSystem) *LookupFileSystem {
 
 // DefaultLayout returns default layout name
 // This name has been checked for availability in LookupAll()
-func (lfs *LookupFileSystem) DefaultLayout() string {
+func (lfs LookupFileSystem) DefaultLayout() string {
 	return lfs.config.DefLayout
 }
 
@@ -91,17 +91,17 @@ func (lfs *LookupFileSystem) DisableCache(flag bool) {
 */
 
 // IncludeNames return sorted slice of include names
-func (lfs *LookupFileSystem) IncludeNames() []string {
+func (lfs LookupFileSystem) IncludeNames() []string {
 	return mapKeys(lfs.Includes)
 }
 
 // LayoutNames return sorted slice of layout names
-func (lfs *LookupFileSystem) LayoutNames() []string {
+func (lfs LookupFileSystem) LayoutNames() []string {
 	return mapKeys(lfs.Layouts)
 }
 
 // PageNames return sorted slice of page names
-func (lfs *LookupFileSystem) PageNames() []string {
+func (lfs LookupFileSystem) PageNames() []string {
 	return mapKeys(lfs.Pages)
 }
 

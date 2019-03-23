@@ -33,7 +33,7 @@ type Template struct {
 	log            loggers.Contextual
 }
 
-// New returns mulate template object
+// New creates template object
 func New(log loggers.Contextual, fs *tpl2x.TemplateService) *Template {
 	return &Template{fs: fs, log: log}
 }
@@ -46,7 +46,7 @@ func (tmpl *Template) Middleware() gin.HandlerFunc {
 }
 
 // Route registers template routes into gin
-func (tmpl *Template) Route(prefix string, r *gin.Engine) {
+func (tmpl Template) Route(prefix string, r *gin.Engine) {
 	if prefix != "" {
 		prefix = prefix + "/"
 	}
@@ -60,7 +60,7 @@ func (tmpl *Template) Route(prefix string, r *gin.Engine) {
 }
 
 // handleHTML returns gin page handler
-func (tmpl *Template) handleHTML(uri string) gin.HandlerFunc {
+func (tmpl Template) handleHTML(uri string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if val, ok := ctx.Get(EngineKey); ok {
 			if t, ok := val.(*Template); ok {
@@ -73,7 +73,7 @@ func (tmpl *Template) handleHTML(uri string) gin.HandlerFunc {
 }
 
 // HTML renders page for given uri with context
-func (tmpl *Template) HTML(ctx *gin.Context, uri string) {
+func (tmpl Template) HTML(ctx *gin.Context, uri string) {
 	funcs := make(template.FuncMap, 0)
 	page := (tmpl.RequestHandler)(ctx, funcs)
 	content := tmpl.fs.RenderContent(uri, funcs, page)
