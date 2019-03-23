@@ -41,13 +41,13 @@ If page content template returns HTML, at step 2, layout template will be called
 
 ## Template structure
 
-As shown in examples, site templates tree might looks like: 
+As shown in examples, site templates tree might looks like:
 
 ```
 tmpl
 ├── inc
 │   ├── footer.tmpl
-│   ├── head.tmpl
+│   ├── header.tmpl
 │   └── menu.tmpl
 ├── layout
 │   ├── default.tmpl
@@ -63,15 +63,14 @@ tmpl
 
 ## Usage
 
-See examples
-
 ### See also
+* [Package examples](https://godoc.org/github.com/apisite/tpl2x#pkg-examples)
 * [gin-tpl2x](https://github.com/apisite/tpl2x/gin-tpl2x) - [gin](https://github.com/gin-gonic/gin) bindings for this package
 
 ### Template methods
 Get http.Request data
 ```
-{{ .Request.Host }}{{ .Request.URL.String }}
+{{ request.Host }}{{ request.URL.String | HTML }}
 ```
 Get query params
 ```

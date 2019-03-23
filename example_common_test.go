@@ -8,6 +8,35 @@ import (
 	"path/filepath"
 )
 
+// BufferPool size for rendered templates
+const bufferSize int = 64
+
+// Page holds page attributes
+type Meta struct {
+	Title       string
+	ContentType string
+	Status      int
+	error       error
+	layout      string
+}
+
+// SetTitle - set page title
+func (p *Meta) SetTitle(name string) (string, error) {
+	p.Title = name
+	return "", nil
+}
+func (p *Meta) SetError(e error) {
+	p.error = e
+}
+
+func (p Meta) Error() error {
+	return p.error
+}
+
+func (p Meta) Layout() string {
+	return "default"
+}
+
 // templateFile defines the contents of a template to be stored in a file, for testing.
 type templateFile struct {
 	dirs     []string

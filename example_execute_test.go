@@ -10,18 +10,7 @@ import (
 	"github.com/apisite/tpl2x/lookupfs"
 )
 
-// Page holds page attributes
-type Page struct {
-	Title string
-}
-
-// SetTitle - set page title
-func (p *Page) SetTitle(name string) (string, error) {
-	p.Title = name
-	return "", nil
-}
-
-// Here we demonstrate loading a set of templates from a directory.
+// Render template with layout
 func Example() {
 
 	cfg := lookupfs.Config{
@@ -47,12 +36,12 @@ page2 here ({{ template "subdir1/inc" .}})`},
 	defer os.RemoveAll(dir)
 
 	cfg.Root = dir
-	tfs, err := tpl2x.New(tpl2x.Config{}).LookupFS(lookupfs.New(cfg)).Parse()
+	tfs, err := tpl2x.New(bufferSize).LookupFS(lookupfs.New(cfg)).Parse()
 	if err != nil {
 		log.Fatal(err)
 	}
 	var b bytes.Buffer
-	page := &Page{}
+	page := &Meta{}
 	err = tfs.Execute(&b, "subdir3/page", template.FuncMap{}, page)
 	if err != nil {
 		log.Fatal(err)

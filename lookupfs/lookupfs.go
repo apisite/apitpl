@@ -1,3 +1,4 @@
+// Package lookupfs intended for getting templates of several types from native or embedded filesystem
 package lookupfs
 
 import (
@@ -43,11 +44,13 @@ type FileSystem interface {
 	Open(name string) (http.File, error)
 }
 
+// File holds file metadata
 type File struct {
 	Path    string
 	ModTime time.Time
 }
 
+// LookupFileSystem holds filesystem with template lookup functionality
 type LookupFileSystem struct {
 	config       Config
 	fs           FileSystem
@@ -57,6 +60,7 @@ type LookupFileSystem struct {
 	disableCache bool
 }
 
+// New creates LookupFileSystem
 func New(cfg Config) *LookupFileSystem {
 	return &LookupFileSystem{
 		config:   cfg,
@@ -67,40 +71,56 @@ func New(cfg Config) *LookupFileSystem {
 	}
 }
 
+// FileSystem changes filesystem access object
 func (lfs *LookupFileSystem) FileSystem(fs FileSystem) *LookupFileSystem {
 	lfs.fs = fs
 	return lfs
 }
 
+// DefaultLayout returns default layout name
+// This name has been checked for availability in LookupAll()
 func (lfs *LookupFileSystem) DefaultLayout() string {
 	return lfs.config.DefLayout
 }
 
+/*
 // DisableCache disables template caching
 func (lfs *LookupFileSystem) DisableCache(flag bool) {
 	lfs.disableCache = flag
 }
+*/
 
+// IncludeNames return sorted slice of include names
 func (lfs *LookupFileSystem) IncludeNames() []string {
 	return mapKeys(lfs.Includes)
 }
+
+// LayoutNames return sorted slice of layout names
 func (lfs *LookupFileSystem) LayoutNames() []string {
 	return mapKeys(lfs.Layouts)
 }
 
+// PageNames return sorted slice of page names
 func (lfs *LookupFileSystem) PageNames() []string {
 	return mapKeys(lfs.Pages)
 }
 
+// LookupAll scan filesystem for includes,pages and layouts
 func (lfs *LookupFileSystem) LookupAll() (err error) {
 	if lfs.config.UseSuffix {
 		err = lfs.lookupFilesBySuffix()
 	} else {
 		err = lfs.lookupFilesByPrefix()
 	}
+	if err == nil {
+		if _, ok := lfs.Layouts[lfs.DefaultLayout()]; !ok {
+			err = errors.Errorf("default layout (%s) does not exists", lfs.DefaultLayout())
+		}
+	}
 	return
 }
 
+// ReadFile reads file via filesystem method
 func (lfs LookupFileSystem) ReadFile(name string) (string, error) {
 	f, err := lfs.fs.Open(name)
 	if err != nil {
@@ -132,8 +152,13 @@ func (lfs LookupFileSystem) walk(tag, prefix string, files *map[string]File) (er
 		// Convert filepath to uri if system is non-POSIX
 		name = filepath.ToSlash(name)
 
+		// Do not end with an index
+		name = strings.TrimSuffix(name, lfs.config.Index)
+
 		// Do not begin with a slash
-		name = strings.TrimPrefix(name, "/")
+		if name != "/" {
+			name = strings.TrimPrefix(name, "/")
+		}
 
 		//fmt.Printf("Found %s -> %s\n", name, path)
 		(*files)[name] = File{Path: path, ModTime: f.ModTime()}
@@ -197,6 +222,7 @@ func (lfs *LookupFileSystem) lookupFilesBySuffix() (err error) {
 	return nil
 }
 
+// mapKeys returns sorted map keys
 func mapKeys(m map[string]File) []string {
 	keys := make([]string, len(m))
 	i := 0

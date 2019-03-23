@@ -12,7 +12,7 @@ import (
 	"github.com/apisite/tpl2x/lookupfs"
 )
 
-// Here we demonstrate loading a set of templates from a directory.
+// Handle set of templates via http
 func Example_http() {
 
 	cfg := lookupfs.Config{
@@ -44,7 +44,7 @@ page2 here ({{ template "subdir1/inc" .}})`},
 		},
 		"_content": func() template.HTML { return template.HTML("") },
 	}
-	tfs, err := tpl2x.New(tpl2x.Config{}).Funcs(funcs).LookupFS(lookupfs.New(cfg)).Parse()
+	tfs, err := tpl2x.New(bufferSize).Funcs(funcs).LookupFS(lookupfs.New(cfg)).Parse()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,7 +55,6 @@ page2 here ({{ template "subdir1/inc" .}})`},
 	}
 
 	resp := httptest.NewRecorder()
-
 	req, err := http.NewRequest("GET", "/subdir3/page", nil)
 	if err != nil {
 		log.Fatal(err)
@@ -85,40 +84,20 @@ func handleHTML(tfs *tpl2x.TemplateService, uri string) func(w http.ResponseWrit
 				return *r
 			},
 		}
-		content, err := tfs.RenderContent(uri, funcs, page)
-		if err != nil {
-			if page.Status == http.StatusMovedPermanently || page.Status == http.StatusFound {
-				http.Redirect(w, r, page.Title, page.Status)
-				return
-			}
-			//		log.Errorf("page error: (%+v)", err)
-			if page.Status == http.StatusOK {
-				page.Status = http.StatusInternalServerError
-				//page.Raise(page.Status, "Internal", err.Error(), false)
-			}
+		content := tfs.RenderContent(uri, funcs, page)
+		if page.Status == http.StatusMovedPermanently || page.Status == http.StatusFound {
+			http.Redirect(w, r, page.Title, page.Status)
+			return
 		}
 		header := w.Header()
 		header["Content-Type"] = []string{page.ContentType}
 		w.WriteHeader(page.Status)
 		funcs["_content"] = func() template.HTML { return template.HTML(content.Bytes()) }
 
-		err = tfs.Render(w, funcs, page, content)
+		err := tfs.Render(w, funcs, page, content)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 	}
-}
-
-// Page holds page attributes
-type Meta struct {
-	Title       string
-	ContentType string
-	Status      int
-}
-
-// SetTitle - set page title
-func (p *Meta) SetTitle(name string) (string, error) {
-	p.Title = name
-	return "", nil
 }

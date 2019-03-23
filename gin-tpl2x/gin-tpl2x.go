@@ -18,10 +18,18 @@ import (
 // EngineKey holds gin context key name for engine storage
 const EngineKey = "github.com/apisite/tpl2x"
 
+// MetaData holds template metadata access methods
+type MetaData interface {
+	tpl2x.MetaData
+	ContentType() string // Return layout name
+	Location() string    // Return redirect url
+	Status() int         // Response status
+}
+
 // Template holds template engine attributes
 type Template struct {
 	fs             *tpl2x.TemplateService
-	RequestHandler func(ctx *gin.Context, funcs template.FuncMap) interface{}
+	RequestHandler func(ctx *gin.Context, funcs template.FuncMap) MetaData
 	log            loggers.Contextual
 }
 
@@ -64,67 +72,32 @@ func (tmpl *Template) handleHTML(uri string) gin.HandlerFunc {
 	}
 }
 
-// HTML renders page for given uri
+// HTML renders page for given uri with context
 func (tmpl *Template) HTML(ctx *gin.Context, uri string) {
 	funcs := make(template.FuncMap, 0)
-	// Get funcMap copy
-	/*
-		for k, v := range tmpl.fs.Funcs {
-			funcs[k] = v
-		}
-	*/
-
-	//if tmpl.FuncHandler != nil {
 	page := (tmpl.RequestHandler)(ctx, funcs)
-	//}
-	//p, err := tmpl.RenderPage(uri, funcs, ctx.Request)
-
-	content, err := tmpl.fs.RenderContent(uri, funcs, page)
-	if err != nil {
-		/*
-			if p.Status == http.StatusMovedPermanently || p.Status == http.StatusFound {
-				ctx.Redirect(p.Status, p.Title)
-				return
-			}
-			tmpl.log.Debugf("page error: (%+v)", err)
-			if p.Status == http.StatusOK {
-				p.Status = http.StatusInternalServerError
-				p.Raise(p.Status, "Internal", err.Error(), false)
-			}
-		*/
+	content := tmpl.fs.RenderContent(uri, funcs, page)
+	if page.Status() == http.StatusMovedPermanently || page.Status() == http.StatusFound {
+		ctx.Redirect(page.Status(), page.Location())
+		return
 	}
-	renderer := Renderer{fs: tmpl.fs, funcMap: funcs, data: page, content: content}
-	//	ctx.Header("Content-Type", p.ContentType)
-
-	//TODO	ctx.Render(p.Status, renderer)
-	ctx.Render(http.StatusOK, renderer)
+	r := renderer{fs: tmpl.fs, funcMap: funcs, data: page, content: content}
+	ctx.Header("Content-Type", page.ContentType())
+	ctx.Render(page.Status(), r)
 }
 
 // Renderer holds per request rendering attributes
-type Renderer struct {
+type renderer struct {
 	fs      *tpl2x.TemplateService
 	content *bytes.Buffer
 	funcMap template.FuncMap
-	data    interface{}
+	data    MetaData
 }
 
-// NewRenderer creates new renderer object
-/*
-func NewRenderer(fs *tpl2x.TemplateService, page *tpl2x.Page) *Renderer {
-	return &Renderer{fs: fs, page: page}
-}
-*/
 // Render - render page and write it to w
-func (r Renderer) Render(w http.ResponseWriter) error {
-	//	funcs["_content"] = func() template.HTML { return template.HTML(content.Bytes()) }
+func (r renderer) Render(w http.ResponseWriter) error {
 	return r.fs.Render(w, r.funcMap, r.data, r.content)
 }
 
-// WriteContentType writes page content type
-func (r Renderer) WriteContentType(w http.ResponseWriter) {
-	//header := w.Header()
-	// TODO: r.Page.ContentType
-	//	if val := header["Content-Type"]; len(val) == 0 {
-	//TODO	header["Content-Type"] = []string{r.page.ContentType}
-	//	}
-}
+// WriteContentType called when Status does not allow body
+func (r renderer) WriteContentType(w http.ResponseWriter) {}

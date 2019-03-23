@@ -46,10 +46,11 @@ func createTestDir(ext string, files []templateFile) string {
 func Example_lookupByPrefix() {
 
 	cfg := Config{
-		Includes: "includes",
-		Layouts:  "layouts",
-		Pages:    "pages",
-		Ext:      ".html",
+		Includes:  "includes",
+		Layouts:   "layouts",
+		Pages:     "pages",
+		Ext:       ".html",
+		DefLayout: "lay",
 	}
 	// Here we create a temporary directory and populate it with our sample
 	// template definition files; usually the template files would already
@@ -89,6 +90,7 @@ func Example_lookupBySuffix() {
 		Layouts:   ".layouts",
 		Pages:     "not_used",
 		Ext:       ".html",
+		DefLayout: "lay",
 		UseSuffix: true,
 	}
 	// Here we create a temporary directory and populate it with our sample
