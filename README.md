@@ -12,7 +12,7 @@
 [cc2]: https://codecov.io/gh/apisite/tpl2x
 [gd1]: https://godoc.org/github.com/apisite/tpl2x?status.svg
 [gd2]: https://godoc.org/github.com/apisite/tpl2x
-[gc1]: https://goreportcard.com/badge/apisite/tpl2x
+[gc1]: https://goreportcard.com/badge/github.com/apisite/tpl2x
 [gc2]: https://goreportcard.com/report/github.com/apisite/tpl2x
 [gr1]: https://img.shields.io/github/release-pre/apisite/tpl2x.svg
 [gr2]: https://github.com/apisite/tpl2x/releases
