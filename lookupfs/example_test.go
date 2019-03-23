@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	// "text/template"
 )
 
 // templateFile defines the contents of a template to be stored in a file, for testing.
@@ -43,7 +42,7 @@ func createTestDir(ext string, files []templateFile) string {
 }
 
 // Lookup filesystem for templates separated by directory
-func Example_lookupByPrefix() {
+func Example_lookupAllByPrefix() {
 
 	cfg := Config{
 		Includes:  "includes",
@@ -83,7 +82,7 @@ func Example_lookupByPrefix() {
 }
 
 // Lookup filesystem for templates separated by filename suffix
-func Example_lookupBySuffix() {
+func Example_lookupAllBySuffix() {
 
 	cfg := Config{
 		Includes:  ".includes",

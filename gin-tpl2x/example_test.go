@@ -1,4 +1,4 @@
-package gintpl2x_test
+package gintpl2x
 
 import (
 	"fmt"
@@ -17,7 +17,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/apisite/tpl2x"
-	"github.com/apisite/tpl2x/gin-tpl2x"
 	"github.com/apisite/tpl2x/lookupfs"
 )
 
@@ -210,7 +209,7 @@ func mkRouter() *gin.Engine {
 	if err != nil {
 		log.Fatal(err)
 	}
-	gintpl := gintpl2x.New(log, tfs)
+	gintpl := New(log, tfs)
 	gintpl.RequestHandler = requestHandler
 
 	gin.SetMode(gin.ReleaseMode)
@@ -220,7 +219,7 @@ func mkRouter() *gin.Engine {
 }
 
 // funcs which return real data inside request processing
-func requestHandler(ctx *gin.Context, funcs template.FuncMap) gintpl2x.MetaData {
+func requestHandler(ctx *gin.Context, funcs template.FuncMap) MetaData {
 	funcs["data"] = func() interface{} { return data }
 	funcs["request"] = func() interface{} { return ctx.Request }
 	funcs["param"] = func(key string) string { return ctx.Param(key) }
