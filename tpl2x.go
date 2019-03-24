@@ -183,6 +183,12 @@ func (tfs TemplateService) layout(name string, data MetaData) *template.Template
 func (tfs TemplateService) Render(w io.Writer, funcs template.FuncMap, data MetaData, content *bytes.Buffer) (err error) {
 
 	name := data.Layout()
+	if name == "" {
+		// No layout needed
+		content.WriteTo(w)
+		tfs.bufPool.Put(content)
+		return nil
+	}
 	tmpl := tfs.layout(name, data)
 	buf := tfs.bufPool.Get()
 	defer tfs.bufPool.Put(buf)
