@@ -22,6 +22,7 @@ type TemplateService struct {
 	baseTemplate     *template.Template
 	bufPool          *bpool.BufferPool
 	useCustomContent bool
+	parseAlways      bool
 }
 
 // MetaData holds template metadata access methods
@@ -45,6 +46,12 @@ func New(size int) (tfs *TemplateService) {
 // LookupFS sets lookup filesystem
 func (tfs *TemplateService) LookupFS(fs *lookupfs.LookupFileSystem) *TemplateService {
 	tfs.lfs = fs
+	return tfs
+}
+
+// ParseAlways disables template caching
+func (tfs *TemplateService) ParseAlways(flag bool) *TemplateService {
+	tfs.parseAlways = flag
 	return tfs
 }
 
@@ -76,18 +83,18 @@ func (tfs *TemplateService) Parse() (*TemplateService, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	layouts, err := tfs.parseTemplates(includes, tfs.lfs.Layouts)
+	if err != nil {
+		return nil, err
+	}
+
+	pages, err := tfs.parseTemplates(includes, tfs.lfs.Pages)
+	if err != nil {
+		return nil, err
+	}
+
 	tfs.baseTemplate = includes
-
-	layouts, err := tfs.parseTemplates(tfs.lfs.Layouts)
-	if err != nil {
-		return nil, err
-	}
-
-	pages, err := tfs.parseTemplates(tfs.lfs.Pages)
-	if err != nil {
-		return nil, err
-	}
-
 	tfs.layouts = layouts
 	tfs.pages = pages
 	return tfs, nil
@@ -118,31 +125,50 @@ func (tfs TemplateService) parseIncludes(items map[string]lookupfs.File) (*templ
 }
 
 // parseTemplates parses all page & layout templates
-func (tfs TemplateService) parseTemplates(items map[string]lookupfs.File) (*map[string]*template.Template, error) {
+func (tfs TemplateService) parseTemplates(includes *template.Template, items map[string]lookupfs.File) (*map[string]*template.Template, error) {
 	templates := map[string]*template.Template{}
 	for k, f := range items {
-		s, err := tfs.lfs.ReadFile(f.Path)
+		tmpl, err := tfs.parseTemplate(includes, k, f)
 		if err != nil {
-			return nil, err
-		}
-		t := tfs.baseTemplate
-		var tmpl *template.Template
-		if t == nil {
-			tmpl = template.New(k)
-		} else {
-			tmpl, err = t.Clone()
-			if err != nil {
-				return nil, err
-			}
-			tmpl = tmpl.New(k)
-		}
-		_, err = tmpl.Funcs(tfs.funcMap).Parse(s)
-		if err != nil {
-			return nil, errors.Wrap(err, "process layout")
+			return nil, errors.Wrap(err, "parse template")
 		}
 		templates[k] = tmpl
 	}
 	return &templates, nil
+}
+
+// parseTemplate parses single template
+func (tfs TemplateService) parseTemplate(includes *template.Template, k string, f lookupfs.File) (*template.Template, error) {
+	s, err := tfs.lfs.ReadFile(f.Path)
+	if err != nil {
+		return nil, err
+	}
+	t := includes
+	var tmpl *template.Template
+	if t == nil {
+		tmpl = template.New(k)
+	} else {
+		tmpl, err = t.Clone()
+		if err != nil {
+			return nil, err
+		}
+		tmpl = tmpl.New(k)
+	}
+	_, err = tmpl.Funcs(tfs.funcMap).Parse(s)
+	return tmpl, err
+}
+
+func (tfs TemplateService) parseTemplateWithDeps(items map[string]lookupfs.File, name string) (*template.Template, error) {
+	includes, err := tfs.parseIncludes(tfs.lfs.Includes)
+	if err != nil {
+		return nil, err
+	}
+	f, ok := items[name]
+	if !ok {
+		err := fmt.Errorf("The page %s does not exist.", name)
+		return nil, err
+	}
+	return tfs.parseTemplate(includes, name, f)
 }
 
 // Execute renders page content and layout
@@ -152,14 +178,25 @@ func (tfs TemplateService) Execute(wr io.Writer, name string, funcs template.Fun
 
 // RenderContent renders page content
 func (tfs TemplateService) RenderContent(name string, funcs template.FuncMap, data MetaData) *bytes.Buffer {
-	tmpl, ok := (*tfs.pages)[name] // TODO: tfs.Lookup(tfs.pages, name)
-	if !ok {
-		err := fmt.Errorf("The page %s does not exist.", name)
-		data.SetError(err)
-		return nil
+	var tmpl *template.Template
+	var err error
+	if tfs.parseAlways {
+		tmpl, err = tfs.parseTemplateWithDeps(tfs.lfs.Pages, name)
+		if err != nil {
+			data.SetError(err)
+			return nil
+		}
+	} else {
+		var ok bool
+		tmpl, ok = (*tfs.pages)[name] // TODO: tfs.Lookup(tfs.pages, name)
+		if !ok {
+			err = fmt.Errorf("The page %s does not exist.", name)
+			data.SetError(err)
+			return nil
+		}
 	}
 	buf := tfs.bufPool.Get()
-	err := tmpl.Funcs(funcs).ExecuteTemplate(buf, name, data)
+	err = tmpl.Funcs(funcs).ExecuteTemplate(buf, name, data)
 	if err != nil {
 		tfs.bufPool.Put(buf)
 		data.SetError(err)
@@ -189,7 +226,18 @@ func (tfs TemplateService) Render(w io.Writer, funcs template.FuncMap, data Meta
 		tfs.bufPool.Put(content)
 		return nil
 	}
-	tmpl := tfs.layout(name, data)
+	var tmpl *template.Template
+	if tfs.parseAlways {
+		var err error
+		tmpl, err = tfs.parseTemplateWithDeps(tfs.lfs.Layouts, name)
+		if err != nil {
+			data.SetError(err)
+			// TODO: parse default layout?
+			tmpl = (*tfs.layouts)[tfs.lfs.DefaultLayout()]
+		}
+	} else {
+		tmpl = tfs.layout(name, data)
+	}
 	buf := tfs.bufPool.Get()
 	defer tfs.bufPool.Put(buf)
 	if !tfs.useCustomContent && content != nil {

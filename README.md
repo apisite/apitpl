@@ -63,6 +63,13 @@ tmpl
 
 ## Usage
 
+### Template parsing
+
+All templates from the `Root` directory tree are parsed in `Parse()` call and program should be aborted on error.
+Routes for all page URI should be set in `Route()` call after that.
+
+You can enable per request templates parsing for debugging purposes via `ParseAlways(true)` but you still have to restart your program for adding or removing any template file.
+
 ### See also
 * [Package examples](https://godoc.org/github.com/apisite/tpl2x#pkg-examples)
 * [gin-tpl2x](https://github.com/apisite/tpl2x/gin-tpl2x) - [gin](https://github.com/gin-gonic/gin) bindings for this package
