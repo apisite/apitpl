@@ -1,5 +1,5 @@
 # tpl2x
-> golang templates executed twice, for content and for layout
+> golang template engine which renders templates by executing them 2 times, one for content and another one for layout
 
 [![GoDoc][gd1]][gd2]
  [![codecov][cc1]][cc2]
@@ -24,8 +24,8 @@
 * Future plans: tests & docs
 
 This package offers 2-step template processing, where page content template called first, so it can
-1. change page layout (among them previous markup)
-2. abort processing and return error page (this will go to way 1)
+1. change page layout (among them previous markup) and content type
+2. abort processing and return error page (this will render layout with error and without content)
 3. abort processing and return redirect
 
 If page content template returns HTML, at step 2, layout template will be called for result page markup build.
@@ -33,7 +33,7 @@ If page content template returns HTML, at step 2, layout template will be called
 ## Why do we need another template engine?
 
 1. Adding template file without source recompiling
-2. Support plain HTML body as template (adding layout without additional markup)
+2. Support plain HTML body as template (adding layout without additional markup in content)
 
 ## Request processing flow
 
