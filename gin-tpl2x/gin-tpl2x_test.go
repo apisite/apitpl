@@ -1,15 +1,13 @@
-package gintpl2x_test
-
-// TODO: Make this example runnable at godoc
-// This package moved to _test as attempt to reach this
-// But test coverage was lost, so this code duplicated in gin-tpl2x_test.go
+package gintpl2x
 
 import (
 	"fmt"
 	"html/template"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
 	"log"
@@ -21,7 +19,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/apisite/tpl2x"
-	"github.com/apisite/tpl2x/gin-tpl2x"
 	"github.com/apisite/tpl2x/lookupfs"
 )
 
@@ -77,13 +74,11 @@ type templateFile struct {
 	contents string
 }
 
-func Example() {
+// BufferPool size for rendered templates
+const bufferSize int = 64
 
-	// BufferPool size for rendered templates
-	const bufferSize int = 64
-
-	var templates = []templateFile{
-		{[]string{"layout"}, "default", `<html>
+var templates = []templateFile{
+	{[]string{"layout"}, "default", `<html>
 <head>
   {{ template "header" . }}
 </head>
@@ -94,17 +89,17 @@ func Example() {
 </body>
 </html>
 `},
-		{[]string{"inc"}, "header", `<title>{{ or .Title "Default title" }}</title>`},
-		{[]string{"inc"}, "footer", `<footer>
+	{[]string{"inc"}, "header", `<title>{{ or .Title "Default title" }}</title>`},
+	{[]string{"inc"}, "footer", `<footer>
 <hr>
 Host: {{ request.Host }}<br />
 URL: {{ request.URL.String | HTML }}<br />
 </footer>
 `},
-		{[]string{"inc"}, "menu", `{{ if ne request.URL.String "/" -}}
+	{[]string{"inc"}, "menu", `{{ if ne request.URL.String "/" -}}
 <a href="/">Home</a><br />
 {{ end -}}`},
-		{[]string{"page"}, "index", `{{ .SetTitle "index page" -}}
+	{[]string{"page"}, "index", `{{ .SetTitle "index page" -}}
 <h2>Test data</h2>
 <h3>{{ data.PageTitle }}</h3>
 <ul>
@@ -113,10 +108,66 @@ URL: {{ request.URL.String | HTML }}<br />
 {{end -}}
 </ul>
 `},
-		{[]string{"page"}, "page", `{{ .SetTitle "Test page" -}}Page content
+	{[]string{"page"}, "page", `{{ .SetTitle "Test page" -}}Page content
 `},
-	}
+}
 
+var want = map[string]string{
+	"/": `200
+text/html; charset=utf-8
+<html>
+<head>
+  <title>index page</title>
+</head>
+<body>
+  <h2>Test data</h2>
+<h3>My TODO list</h3>
+<ul>
+<li>Task 1
+<li>Task 2
+<li>Task 3
+</ul>
+<footer>
+<hr>
+Host: <br />
+URL: /<br />
+</footer>
+</body>
+</html>
+`,
+	"page": `200
+text/html; charset=utf-8
+<html>
+<head>
+  <title>Test page</title>
+</head>
+<body>
+  <a href="/">Home</a><br />
+Page content
+<footer>
+<hr>
+Host: <br />
+URL: /page<br />
+</footer>
+</body>
+</html>
+`,
+}
+
+func TestRender(t *testing.T) {
+
+	r := mkRouter()
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	resp := httptest.NewRecorder()
+
+	r.ServeHTTP(resp, req)
+	got := fmt.Sprintf("%d\n%s\n%s", resp.Code, resp.Header().Get("Content-Type"), resp.Body.String())
+	assert.Equal(t, want["/"], got)
+
+}
+
+func mkRouter() *gin.Engine {
 	l := logrus.New()
 	log := mapper.NewLogger(l)
 
@@ -144,8 +195,8 @@ URL: {{ request.URL.String | HTML }}<br />
 	if err != nil {
 		log.Fatal(err)
 	}
-	gintpl := gintpl2x.New(log, tfs)
-	gintpl.RequestHandler = func(ctx *gin.Context, funcs template.FuncMap) gintpl2x.MetaData {
+	gintpl := New(log, tfs)
+	gintpl.RequestHandler = func(ctx *gin.Context, funcs template.FuncMap) MetaData {
 		setRequestFuncs(funcs, ctx)
 		page := Meta{status: http.StatusOK, contentType: "text/html; charset=utf-8"}
 		return &page
@@ -154,39 +205,16 @@ URL: {{ request.URL.String | HTML }}<br />
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	gintpl.Route("", r)
+	return r
+}
 
-	req, _ := http.NewRequest("GET", "/", nil)
-	resp := httptest.NewRecorder()
+func requestHandler(ctx *gin.Context, funcs template.FuncMap) MetaData {
+	funcs["data"] = func() interface{} { return data }
+	funcs["request"] = func() interface{} { return ctx.Request }
+	funcs["param"] = func(key string) string { return ctx.Param(key) }
 
-	r.ServeHTTP(resp, req)
-
-	fmt.Println(resp.Code)
-	fmt.Println(resp.Header().Get("Content-Type"))
-	fmt.Println(resp.Body.String())
-
-	// Output:
-	//200
-	//text/html; charset=utf-8
-	//<html>
-	//<head>
-	//   <title>index page</title>
-	//</head>
-	//<body>
-	//   <h2>Test data</h2>
-	//<h3>My TODO list</h3>
-	//<ul>
-	//<li>Task 1
-	//<li>Task 2
-	//<li>Task 3
-	//</ul>
-	//<footer>
-	//<hr>
-	//Host: <br />
-	//URL: /<br />
-	//</footer>
-	//</body>
-	//</html>
-
+	page := Meta{status: http.StatusOK, contentType: "text/html; charset=utf-8"}
+	return &page
 }
 
 // setProtoFuncs appends function templates and not related to request functions to funcs
