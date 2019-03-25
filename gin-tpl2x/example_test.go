@@ -165,27 +165,27 @@ URL: {{ request.URL.String | HTML }}<br />
 	fmt.Println(resp.Body.String())
 
 	// Output:
-	//200
-	//text/html; charset=utf-8
-	//<html>
-	//<head>
+	// 200
+	// text/html; charset=utf-8
+	// <html>
+	// <head>
 	//   <title>index page</title>
-	//</head>
-	//<body>
+	// </head>
+	// <body>
 	//   <h2>Test data</h2>
-	//<h3>My TODO list</h3>
-	//<ul>
-	//<li>Task 1
-	//<li>Task 2
-	//<li>Task 3
-	//</ul>
-	//<footer>
-	//<hr>
-	//Host: <br />
-	//URL: /<br />
-	//</footer>
-	//</body>
-	//</html>
+	// <h3>My TODO list</h3>
+	// <ul>
+	// <li>Task 1
+	// <li>Task 2
+	// <li>Task 3
+	// </ul>
+	// <footer>
+	// <hr>
+	// Host: <br />
+	// URL: /<br />
+	// </footer>
+	// </body>
+	// </html>
 
 }
 
