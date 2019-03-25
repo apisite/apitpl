@@ -1,4 +1,5 @@
-// Package tpl2x renders templates by execiting them twice, one for content and one for layout
+// Package tpl2x implements template engine which renders templates
+// by execiting them 2 times, one for content and one for layout.
 package tpl2x
 
 import (

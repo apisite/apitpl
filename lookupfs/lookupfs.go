@@ -1,4 +1,5 @@
-// Package lookupfs intended for getting templates of several types from native or embedded filesystem
+// Package lookupfs implements a filesystem backend for tpl2x.
+// It can use native filesystem (by default) or embedded filesystem (which can be set via FileSystem func).
 package lookupfs
 
 import (
@@ -33,7 +34,7 @@ func (fs defaultFS) Walk(path string, wf filepath.WalkFunc) error {
 func (fs defaultFS) Open(name string) (http.File, error) {
 	f, err := os.Open(name)
 	if err != nil {
-		return nil, err //mapDirOpenError(err, fullName)
+		return nil, err // TODO: What with mapDirOpenError(err, fullName)?
 	}
 	return f, nil
 }
