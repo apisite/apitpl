@@ -116,6 +116,11 @@ in templates
 
 ```
 
+## See also
+
+* https://stackoverflow.com/questions/42747183/how-to-render-templates-to-multiple-layouts-in-go
+* https://medium.com/@leeprovoost/dealing-with-go-template-errors-at-runtime-1b429e8b854a
+
 ## License
 
 The MIT License (MIT), see [LICENSE](LICENSE).
