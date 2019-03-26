@@ -73,7 +73,7 @@ func Example_lookupAllByPrefix() {
 	}
 	fmt.Printf("includes: %v\n", fs.IncludeNames())
 	fmt.Printf("layouts: %v\n", fs.LayoutNames())
-	fmt.Printf("pages: %v\n", fs.PageNames())
+	fmt.Printf("pages: %v\n", fs.PageNames(false))
 
 	// Output:
 	// includes: [inc subdir1/inc]
@@ -114,7 +114,7 @@ func Example_lookupAllBySuffix() {
 	}
 	fmt.Printf("includes: %v\n", fs.IncludeNames())
 	fmt.Printf("layouts: %v\n", fs.LayoutNames())
-	fmt.Printf("pages: %v\n", fs.PageNames())
+	fmt.Printf("pages: %v\n", fs.PageNames(false))
 	// Output:
 	// includes: [inc subdir1/inc]
 	// layouts: [lay subdir2/lay]

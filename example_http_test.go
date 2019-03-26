@@ -50,7 +50,7 @@ page2 here ({{ template "subdir1/inc" .}})`},
 	}
 
 	router := http.NewServeMux()
-	for _, uri := range tfs.PageNames() {
+	for _, uri := range tfs.PageNames(false) {
 		router.HandleFunc("/"+uri, handleHTML(tfs, uri))
 	}
 

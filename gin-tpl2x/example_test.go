@@ -127,13 +127,14 @@ URL: {{ request.URL.String | HTML }}<br />
 	setProtoFuncs(allFuncs)
 
 	cfg := lookupfs.Config{
-		Includes:  "inc",
-		Layouts:   "layout",
-		Pages:     "page",
-		Ext:       ".tmpl",
-		DefLayout: "default",
-		Index:     "index",
-		Root:      "./tmpl",
+		Includes:   "inc",
+		Layouts:    "layout",
+		Pages:      "page",
+		Ext:        ".tmpl",
+		DefLayout:  "default",
+		Index:      "index",
+		Root:       "./tmpl",
+		HidePrefix: ".",
 	}
 	dir := createTestDir(cfg.Ext, templates)
 	// Clean up after the test; another quirk of running as an example.

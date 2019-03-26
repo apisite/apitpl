@@ -1,18 +1,16 @@
 // Package gintpl2x implements a gin frontend for tpl2x.
 package gintpl2x
 
-// https://stackoverflow.com/questions/42747183/how-to-render-templates-to-multiple-layouts-in-go
-
 import (
-	"github.com/gin-gonic/gin"
-
 	"bytes"
 	"html/template"
+	"io"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"gopkg.in/birkirb/loggers.v1"
 
-	"github.com/apisite/tpl2x" // TODO: change to interface
+	"github.com/apisite/tpl2x" // TODO: stop tpl2x.MetaData usage
 )
 
 // EngineKey holds gin context key name for engine storage
@@ -26,15 +24,21 @@ type MetaData interface {
 	Status() int         // Response status
 }
 
+type TemplateService interface {
+	PageNames(hide bool) []string
+	Render(w io.Writer, funcs template.FuncMap, data tpl2x.MetaData, content *bytes.Buffer) (err error)
+	RenderContent(name string, funcs template.FuncMap, data tpl2x.MetaData) *bytes.Buffer
+}
+
 // Template holds template engine attributes
 type Template struct {
-	fs             *tpl2x.TemplateService
 	RequestHandler func(ctx *gin.Context, funcs template.FuncMap) MetaData
+	fs             TemplateService
 	log            loggers.Contextual
 }
 
 // New creates template object
-func New(log loggers.Contextual, fs *tpl2x.TemplateService) *Template {
+func New(log loggers.Contextual, fs TemplateService) *Template {
 	return &Template{fs: fs, log: log}
 }
 
@@ -54,7 +58,7 @@ func (tmpl Template) Route(prefix string, r *gin.Engine) {
 	// we need this before page registering
 	r.Use(tmpl.Middleware())
 
-	for _, p := range tmpl.fs.PageNames() {
+	for _, p := range tmpl.fs.PageNames(true) {
 		r.GET(prefix+p, tmpl.handleHTML(p)) // TODO: map[content-type]Pages
 	}
 }
@@ -88,7 +92,7 @@ func (tmpl Template) HTML(ctx *gin.Context, uri string) {
 
 // Renderer holds per request rendering attributes
 type renderer struct {
-	fs      *tpl2x.TemplateService
+	fs      TemplateService
 	content *bytes.Buffer
 	funcMap template.FuncMap
 	data    MetaData

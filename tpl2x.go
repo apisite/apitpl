@@ -68,8 +68,8 @@ func (tfs *TemplateService) Funcs(funcMap template.FuncMap) *TemplateService {
 }
 
 // PageNames returns page names for router setup
-func (tfs TemplateService) PageNames() []string {
-	return tfs.lfs.PageNames()
+func (tfs TemplateService) PageNames(hide bool) []string {
+	return tfs.lfs.PageNames(hide)
 }
 
 // Parse parses all of service templates
@@ -217,14 +217,16 @@ func (tfs TemplateService) layout(name string, data MetaData) *template.Template
 	return tmpl
 }
 
-// Render renders whole page (layout + content)
+// Render renders layout with prepared content
 func (tfs TemplateService) Render(w io.Writer, funcs template.FuncMap, data MetaData, content *bytes.Buffer) (err error) {
 
 	name := data.Layout()
 	if name == "" {
 		// No layout needed
-		content.WriteTo(w)
-		tfs.bufPool.Put(content)
+		if content != nil {
+			content.WriteTo(w)
+			tfs.bufPool.Put(content)
+		}
 		return nil
 	}
 	var tmpl *template.Template

@@ -15,14 +15,15 @@ import (
 
 // Config holds config variables and its defaults
 type Config struct {
-	Root      string `long:"templates" default:"tmpl/" description:"Templates root path"`
-	Ext       string `long:"mask" default:".tmpl" description:"Templates filename mask"`
-	Includes  string `long:"includes" default:"inc/" description:"Includes path"`
-	Layouts   string `long:"layouts" default:"layout/" description:"Layouts path"`
-	Pages     string `long:"pages" default:"page/" description:"Pages path"`
-	UseSuffix bool   `long:"use_suffix" description:"Template type defined by suffix"`
-	Index     string `long:"index" default:"index" description:"Index page name"`
-	DefLayout string `long:"def_layout" default:"default" description:"Default layout template"`
+	Root       string `long:"templates" default:"tmpl/" description:"Templates root path"`
+	Ext        string `long:"mask" default:".tmpl" description:"Templates filename mask"`
+	Includes   string `long:"includes" default:"inc/" description:"Includes path"`
+	Layouts    string `long:"layouts" default:"layout/" description:"Layouts path"`
+	Pages      string `long:"pages" default:"page/" description:"Pages path"`
+	UseSuffix  bool   `long:"use_suffix" description:"Template type defined by suffix"`
+	Index      string `long:"index" default:"index" description:"Index page name"`
+	DefLayout  string `long:"def_layout" default:"default" description:"Default layout template"`
+	HidePrefix string `long:"hide_prefix" default:"." description:"Treat files with this prefix as hidden"`
 }
 
 type defaultFS struct{}
@@ -84,26 +85,19 @@ func (lfs LookupFileSystem) DefaultLayout() string {
 	return lfs.config.DefLayout
 }
 
-/*
-// DisableCache disables template caching
-func (lfs *LookupFileSystem) DisableCache(flag bool) {
-	lfs.disableCache = flag
-}
-*/
-
 // IncludeNames return sorted slice of include names
 func (lfs LookupFileSystem) IncludeNames() []string {
-	return mapKeys(lfs.Includes)
+	return mapKeys(lfs.Includes, "", false)
 }
 
 // LayoutNames return sorted slice of layout names
 func (lfs LookupFileSystem) LayoutNames() []string {
-	return mapKeys(lfs.Layouts)
+	return mapKeys(lfs.Layouts, "", false)
 }
 
 // PageNames return sorted slice of page names
-func (lfs LookupFileSystem) PageNames() []string {
-	return mapKeys(lfs.Pages)
+func (lfs LookupFileSystem) PageNames(hide bool) []string {
+	return mapKeys(lfs.Pages, lfs.config.HidePrefix, hide)
 }
 
 // LookupAll scan filesystem for includes,pages and layouts
@@ -224,12 +218,14 @@ func (lfs *LookupFileSystem) lookupFilesBySuffix() (err error) {
 }
 
 // mapKeys returns sorted map keys
-func mapKeys(m map[string]File) []string {
-	keys := make([]string, len(m))
-	i := 0
+func mapKeys(m map[string]File, prefix string, hide bool) []string {
+	keys := make([]string, 0) // len depends on hide
 	for k := range m {
-		keys[i] = k
-		i++
+		if hide && (strings.HasPrefix(k, prefix) || strings.Contains(k, "/"+prefix)) {
+			// Skip hidden pages
+			continue
+		}
+		keys = append(keys, k)
 	}
 	sort.StringSlice(keys).Sort()
 	return keys
