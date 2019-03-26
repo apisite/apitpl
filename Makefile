@@ -34,9 +34,8 @@ coverage.out: $(SOURCES) gin-tpl2x/coverage.out
 # internal target
 gin-tpl2x/coverage.out: gin-tpl2x/*.go
 	pushd gin-tpl2x ; \
-	$(GO) test -race -coverprofile=$@ -covermode=atomic ; \
+	$(GO) test -race -coverprofile=coverage.out -covermode=atomic ; \
 	popd
-
 
 ## make coverage.out and send it to codecov.io
 cov-pub: cov
@@ -45,6 +44,10 @@ cov-pub: cov
 ## open browser with coverage report
 cov-html: cov
 	$(GO) tool cover -html=coverage.out
+
+cov-clean:
+	rm -f coverage.out
+	rm -f gin-tpl2x/coverage.out
 
 # ------------------------------------------------------------------------------
 
