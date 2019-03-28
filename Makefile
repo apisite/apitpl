@@ -5,6 +5,9 @@ CFG         = .env
 GO         ?= go
 SOURCES    ?= *.go */*.go
 
+TPL2X_TESTDATA    = $(shell find testdata/ -type f)
+GINTPL2X_TESTDATA = $(shell find gin-tpl2x/testdata/ -type f)
+
 CODECOV_KEY =
 
 define CONFIG_DEF
@@ -20,6 +23,29 @@ export CONFIG_DEF
 
 -include $(CFG)
 export
+
+# ------------------------------------------------------------------------------
+%/resource.go: $(find `dirname $@`)
+	@pushd `dirname $@` ; \
+	go generate ; \
+	popd
+
+## generate embedded filesystems for tests
+gen: sample/resource.go gin-tpl2x/sample/resource.go
+
+# internal target
+#gin-tpl2x/sample/resource.go:
+
+# $(GINTPL2X_TESTDATA)
+#	pushd gin-tpl2x/sample ; \
+#	go generate ; \
+#	popd
+
+# internal target
+#sample/resource.go: $(TPL2X_TESTDATA)
+#	pushd sample ; \
+#	go generate ; \
+#	popd
 
 # ------------------------------------------------------------------------------
 
@@ -38,7 +64,7 @@ gin-tpl2x/coverage.out: gin-tpl2x/*.go
 	popd
 
 ## make coverage.out and send it to codecov.io
-cov-pub: cov
+cov-push: cov
 	bash <(curl -s https://codecov.io/bash) -t $(CODECOV_KEY)
 
 ## open browser with coverage report

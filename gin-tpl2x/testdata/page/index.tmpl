@@ -1,0 +1,8 @@
+{{ .SetTitle "index page" -}}
+<h2>Test data</h2>
+<h3>{{ data.PageTitle }}</h3>
+<ul>
+{{range data.Todos -}}
+    <li>{{- .Title }}
+{{end -}}
+</ul>

@@ -6,14 +6,18 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 
 	"github.com/apisite/tpl2x"
 	"github.com/apisite/tpl2x/lookupfs"
+
+	"github.com/apisite/tpl2x/sample"
 )
 
 // Handle set of templates via http
 func Example_http() {
+
+	// BufferPool size for rendered templates
+	const bufferSize int = 64
 
 	cfg := lookupfs.Config{
 		Includes:  "includes",
@@ -22,29 +26,20 @@ func Example_http() {
 		Ext:       ".html",
 		DefLayout: "default",
 	}
-	// Here we create a temporary directory and populate it with our sample
-	// template definition files; usually the template files would already
-	// exist in some location known to the program.
-	dir := createTestDir(cfg.Ext, []templateFile{
-		{[]string{"includes"}, "inc", `inc1 (URI: {{ request.URL }})`},
-		{[]string{"includes", "subdir1"}, "inc", `inc2 here`},
-		{[]string{"layouts"}, "default", `<title>{{ or .Title "Default title" }}</title>=={{ _content -}}=={{ template "inc" .}} `},
-		{[]string{"layouts", "subdir2"}, "lay", `lay2 here`},
-		{[]string{"pages"}, "page", `page1 here`},
-		{[]string{"pages", "subdir3"}, "page", `{{ .SetTitle "Template title" }}
-page2 here ({{ template "subdir1/inc" .}})`},
-	})
-	// Clean up after the test; another quirk of running as an example.
-	defer os.RemoveAll(dir)
 
-	cfg.Root = dir
 	funcs := template.FuncMap{
 		"request": func() http.Request {
-			return http.Request{} //nil
+			return http.Request{}
 		},
-		"_content": func() template.HTML { return template.HTML("") },
+		"content": func() template.HTML { return template.HTML("") },
 	}
-	tfs, err := tpl2x.New(bufferSize).Funcs(funcs).LookupFS(lookupfs.New(cfg)).Parse()
+
+	tfs, err := tpl2x.New(bufferSize).
+		Funcs(funcs).
+		LookupFS(
+			lookupfs.New(cfg).
+				FileSystem(sample.FS())).
+		Parse()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,7 +63,8 @@ page2 here ({{ template "subdir1/inc" .}})`},
 	// Output:
 	// 200
 	// text/html; charset=utf-8
-	// <title>Template title</title>==
+	// <title>Template title</title>
+	// ==
 	// page2 here (inc2 here)==inc1 (URI: /subdir3/page)
 
 }
@@ -78,21 +74,21 @@ func handleHTML(tfs *tpl2x.TemplateService, uri string) func(w http.ResponseWrit
 	return func(w http.ResponseWriter, r *http.Request) {
 		//		log.Debugf("Handling page (%s)", uri)
 
-		page := &Meta{Status: http.StatusOK, ContentType: "text/html; charset=utf-8"}
+		page := sample.NewMeta(http.StatusOK, "text/html; charset=utf-8")
 		funcs := template.FuncMap{
 			"request": func() http.Request {
 				return *r
 			},
 		}
 		content := tfs.RenderContent(uri, funcs, page)
-		if page.Status == http.StatusMovedPermanently || page.Status == http.StatusFound {
-			http.Redirect(w, r, page.Title, page.Status)
+		if page.Status() == http.StatusMovedPermanently || page.Status() == http.StatusFound {
+			http.Redirect(w, r, page.Title, page.Status())
 			return
 		}
 		header := w.Header()
-		header["Content-Type"] = []string{page.ContentType}
-		w.WriteHeader(page.Status)
-		funcs["_content"] = func() template.HTML { return template.HTML(content.Bytes()) }
+		header["Content-Type"] = []string{page.ContentType()}
+		w.WriteHeader(page.Status())
+		funcs["content"] = func() template.HTML { return template.HTML(content.Bytes()) }
 
 		err := tfs.Render(w, funcs, page, content)
 		if err != nil {

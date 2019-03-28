@@ -1,0 +1,12 @@
+{{ .SetTitle "Test page" -}}
+{{ $err := request.URL.Query.Get "err" -}}
+{{ if $err }}
+{{   .SetTitle "We got an error, sorry" -}}
+{{   .Raise 501 true "Escaped <b>error</b> description" }}
+{{ end -}}
+{{ $wide := request.URL.Query.Get "wide" -}}
+{{ if $wide -}}
+{{   .SetLayout "wide" -}}
+{{ end -}}
+<h2>{{.Title}}</h2>
+<h3>Page content</h3>

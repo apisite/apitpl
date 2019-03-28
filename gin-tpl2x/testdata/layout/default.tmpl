@@ -1,0 +1,17 @@
+{{/*
+    Default page payout
+
+*/ -}}
+<html>
+<head>
+  {{ if .Error }}{{ if not .Title }}{{ printf "Error %d: Sorry" .Status | .SetTitle }}{{ end }}{{ end -}}
+  {{ template "head" . -}}
+</head>
+<body>
+  {{ template "menu" . -}}
+    {{ if .Error }}{{ .ErrorMessage }}
+    {{ else}}{{ content | HTML -}}
+    {{ end -}}
+  {{ template "foot" . -}}
+</body>
+</html>

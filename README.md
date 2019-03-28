@@ -34,6 +34,8 @@ If page content template returns HTML, at step 2, layout template will be called
 
 1. Adding template file without source recompiling
 2. Support plain HTML body as template (adding layout without additional markup in content)
+3. Attach all (pages,layouts,includes) templates at start (see lookupfs)
+4. Auto create routes for all page templates allowing them get required data via api (see gin-tpl2x)
 
 ## Request processing flow
 
