@@ -43,24 +43,22 @@ If page content template returns HTML, at step 2, layout template will be called
 
 ## Template structure
 
-As shown in examples, site templates tree might looks like:
+As shown in testdata, site templates tree might looks like:
 
 ```
 tmpl
-├── inc
-│   ├── footer.tmpl
-│   ├── header.tmpl
-│   └── menu.tmpl
-├── layout
-│   ├── default.tmpl
-│   ├── authorized.tmpl
-│   └── wide.tmpl
-└── page
-    ├── admin
-    │   └── index.tmpl
-    ├── index.tmpl
-    └── page.tmpl
-
+├── includes
+│   ├── inc.html
+│   └── subdir1
+│       └── inc.html
+├── layouts
+│   ├── default.html
+│   └── subdir2
+│       └── lay.html
+└── pages
+    ├── page.html
+    └── subdir3
+        └── page.html
 ```
 
 ## Usage
@@ -95,7 +93,7 @@ Choose layout
 ```
 Stop template processing and raise error
 ```
-{{ .Raise 403 "Test error" "Error description" true }}
+{{ .Raise 403 true "Error description" }}
 ```
 Stop template processing and return redirect 
 ```

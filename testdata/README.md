@@ -1,5 +1,4 @@
 # github.com/apisite/tpl2x testdata
-
 > Templates used in tests and examples
 
 ```

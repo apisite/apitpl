@@ -24,28 +24,24 @@ export CONFIG_DEF
 -include $(CFG)
 export
 
+.PHONY: gen
+
 # ------------------------------------------------------------------------------
-%/resource.go: $(find `dirname $@`)
-	@pushd `dirname $@` ; \
-	go generate ; \
-	popd
 
 ## generate embedded filesystems for tests
 gen: sample/resource.go gin-tpl2x/sample/resource.go
 
 # internal target
-#gin-tpl2x/sample/resource.go:
-
-# $(GINTPL2X_TESTDATA)
-#	pushd gin-tpl2x/sample ; \
-#	go generate ; \
-#	popd
+sample/resource.go: $(shell find testdata)
+	@pushd $(@D) ; \
+	go generate ; \
+	popd
 
 # internal target
-#sample/resource.go: $(TPL2X_TESTDATA)
-#	pushd sample ; \
-#	go generate ; \
-#	popd
+gin-tpl2x/sample/resource.go: $(shell find gin-tpl2x/testdata | sed -E 's/:/\\:/')
+	@pushd $(@D) ; \
+	go generate ; \
+	popd
 
 # ------------------------------------------------------------------------------
 
