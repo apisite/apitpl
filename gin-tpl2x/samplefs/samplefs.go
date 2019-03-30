@@ -6,6 +6,7 @@ package samplefs
 
 import "github.com/phogolabs/parcello"
 
+// FS returns embedded filesystem
 func FS() parcello.FileSystemManager {
 	return parcello.Manager
 }

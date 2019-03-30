@@ -24,6 +24,7 @@ type MetaData interface {
 	Status() int         // Response status
 }
 
+// TemplateService allows to replace tpl2x functionality with the other package
 type TemplateService interface {
 	PageNames(hide bool) []string
 	Render(w io.Writer, funcs template.FuncMap, data tpl2x.MetaData, content *bytes.Buffer) (err error)
@@ -90,7 +91,7 @@ func (tmpl Template) HTML(ctx *gin.Context, uri string) {
 	ctx.Render(page.Status(), r)
 }
 
-// Renderer holds per request rendering attributes
+// renderer holds per request rendering attributes
 type renderer struct {
 	fs      TemplateService
 	content *bytes.Buffer
