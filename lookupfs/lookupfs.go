@@ -150,6 +150,9 @@ func (lfs LookupFileSystem) walk(tag, prefix string, files *map[string]File) (er
 		// Do not end with an index
 		name = strings.TrimSuffix(name, lfs.config.Index)
 
+		// Replace /__ with /: (':' used for params in gin)
+		name = strings.ReplaceAll(name, "/__", "/:")
+
 		// Do not begin with a slash
 		if name != "/" {
 			name = strings.TrimPrefix(name, "/")
