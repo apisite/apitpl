@@ -3,10 +3,7 @@
 SHELL       = /bin/bash
 CFG         = .env
 GO         ?= go
-SOURCES    ?= *.go */*.go
-
-TPL2X_TESTDATA    = $(shell find testdata/ -type f)
-GINTPL2X_TESTDATA = $(shell find gin-tpl2x/testdata/ -type f)
+SOURCES    ?= *.go */*.go */*/*.go
 
 CODECOV_KEY =
 
@@ -29,16 +26,16 @@ export
 # ------------------------------------------------------------------------------
 
 ## generate embedded filesystems for tests
-gen: sample/resource.go gin-tpl2x/sample/resource.go
+gen: samplefs/resource.go gin-tpl2x/samplefs/resource.go
 
 # internal target
-sample/resource.go: $(shell find testdata)
+samplefs/resource.go: $(shell find testdata)
 	@pushd $(@D) ; \
 	go generate ; \
 	popd
 
 # internal target
-gin-tpl2x/sample/resource.go: $(shell find gin-tpl2x/testdata | sed -E 's/:/\\:/')
+gin-tpl2x/samplefs/resource.go: $(shell find gin-tpl2x/testdata | sed -E 's/:/\\:/')
 	@pushd $(@D) ; \
 	go generate ; \
 	popd
@@ -49,9 +46,12 @@ gin-tpl2x/sample/resource.go: $(shell find gin-tpl2x/testdata | sed -E 's/:/\\:/
 cov: coverage.out
 
 # internal target
-coverage.out: $(SOURCES) gin-tpl2x/coverage.out
+coverage.out: $(SOURCES)
 	$(GO) test -race -coverprofile=$@ -covermode=atomic ./...
-	grep -v "mode: atomic" gin-tpl2x/$@ >> $@
+
+#	grep -v "mode: " gin-tpl2x/$@ >> $@
+
+# gin-tpl2x/coverage.out
 
 # internal target
 gin-tpl2x/coverage.out: gin-tpl2x/*.go

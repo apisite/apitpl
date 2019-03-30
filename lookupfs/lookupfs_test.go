@@ -18,6 +18,7 @@ func TestNewErrors(t *testing.T) {
 		{[]string{"includes"}, "inc", `inc1 here`},
 		{[]string{"layouts"}, "lay", `lay1 here`},
 		{[]string{"pages"}, "page", `page1 here`},
+		{[]string{"pages"}, ".page", `hidden page`},
 	})
 	// Clean up after the test; another quirk of running as an example.
 	defer os.RemoveAll(dir)
@@ -42,4 +43,37 @@ func TestNewErrors(t *testing.T) {
 		//fmt.Println(errors.Cause(err))
 		assert.True(t, strings.HasPrefix(err.Error(), tt.err), err.Error())
 	}
+}
+
+func TestHiddenPages(t *testing.T) {
+	cfg := Config{
+		Includes:   "includes",
+		Layouts:    "layouts",
+		Pages:      "pages",
+		Ext:        ".html",
+		DefLayout:  "lay",
+		HidePrefix: ".",
+	}
+	dir := createTestDir(cfg.Ext, []templateFile{
+		{[]string{"includes"}, "inc", `inc1 here`},
+		{[]string{"layouts"}, "lay", `lay1 here`},
+		{[]string{"pages"}, "page", `page1 here`},
+		{[]string{"pages"}, ".page", `hidden page`},
+	})
+	// Clean up after the test; another quirk of running as an example.
+	defer os.RemoveAll(dir)
+	cfg.Root = dir
+
+	fs := New(cfg)
+	err := fs.LookupAll()
+	require.NoError(t, err)
+
+	assert.Equal(t, []string{"page"}, fs.PageNames(true), "no hidden")
+	assert.Equal(t, []string{".page", "page"}, fs.PageNames(false), "no hidden")
+
+	p, ok := fs.Pages[".page"]
+	assert.True(t, ok)
+	s, err := fs.ReadFile(p.Path)
+	require.NoError(t, err)
+	assert.Equal(t, "hidden page", s)
 }

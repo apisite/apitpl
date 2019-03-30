@@ -167,8 +167,10 @@ func (lfs LookupFileSystem) walk(tag, prefix string, files *map[string]File) (er
 
 func (lfs *LookupFileSystem) lookupFilesByPrefix() (err error) {
 
-	if err = lfs.walk("includes", lfs.config.Includes, &lfs.Includes); err != nil {
-		return
+	if lfs.config.Includes != "" {
+		if err = lfs.walk("includes", lfs.config.Includes, &lfs.Includes); err != nil {
+			return
+		}
 	}
 	if err = lfs.walk("layouts", lfs.config.Layouts, &lfs.Layouts); err != nil {
 		return

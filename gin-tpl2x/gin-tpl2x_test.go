@@ -15,7 +15,7 @@ import (
 	"github.com/apisite/tpl2x"
 	"github.com/apisite/tpl2x/lookupfs"
 
-	"github.com/apisite/tpl2x/gin-tpl2x/sample"
+	"github.com/apisite/tpl2x/gin-tpl2x/samplemeta"
 )
 
 func TestRender(t *testing.T) {
@@ -199,8 +199,8 @@ func mkRouter() *gin.Engine {
 	gintpl := New(log, tfs)
 	gintpl.RequestHandler = func(ctx *gin.Context, funcs template.FuncMap) MetaData {
 		setRequestFuncs(funcs, ctx)
-		page := sample.NewMeta(http.StatusOK, "text/html; charset=utf-8")
-		return &page
+		page := samplemeta.NewMeta(http.StatusOK, "text/html; charset=utf-8")
+		return page
 	}
 
 	gin.SetMode(gin.ReleaseMode)
@@ -218,7 +218,7 @@ func setProtoFuncs(funcs template.FuncMap) {
 
 // setRequestFuncs appends funcs which return real data inside request processing
 func setRequestFuncs(funcs template.FuncMap, ctx *gin.Context) {
-	funcs["data"] = func() interface{} { return sample.Data }
+	funcs["data"] = func() interface{} { return samplemeta.Data }
 	funcs["request"] = func() interface{} { return ctx.Request }
 	funcs["param"] = func(key string) string { return ctx.Param(key) }
 }

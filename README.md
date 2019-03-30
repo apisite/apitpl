@@ -43,7 +43,7 @@ If page content template returns HTML, at step 2, layout template will be called
 
 ## Template structure
 
-As shown in testdata, site templates tree might looks like:
+As shown in [testdata](tree/master/testdata), site templates tree might looks like:
 
 ```
 tmpl

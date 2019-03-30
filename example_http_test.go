@@ -10,7 +10,8 @@ import (
 	"github.com/apisite/tpl2x"
 	"github.com/apisite/tpl2x/lookupfs"
 
-	"github.com/apisite/tpl2x/sample"
+	"github.com/apisite/tpl2x/samplefs"
+	"github.com/apisite/tpl2x/samplemeta"
 )
 
 // Handle set of templates via http
@@ -38,7 +39,8 @@ func Example_http() {
 		Funcs(funcs).
 		LookupFS(
 			lookupfs.New(cfg).
-				FileSystem(sample.FS())).
+				FileSystem(samplefs.FS())).
+		ParseAlways(true).
 		Parse()
 	if err != nil {
 		log.Fatal(err)
@@ -74,7 +76,7 @@ func handleHTML(tfs *tpl2x.TemplateService, uri string) func(w http.ResponseWrit
 	return func(w http.ResponseWriter, r *http.Request) {
 		//		log.Debugf("Handling page (%s)", uri)
 
-		page := sample.NewMeta(http.StatusOK, "text/html; charset=utf-8")
+		page := samplemeta.NewMeta(http.StatusOK, "text/html; charset=utf-8")
 		funcs := template.FuncMap{
 			"request": func() http.Request {
 				return *r

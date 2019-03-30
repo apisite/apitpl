@@ -1,4 +1,4 @@
-package sample
+package samplemeta
 
 // Todo holds single todo item attrs
 type Todo struct {
@@ -12,6 +12,7 @@ type TodoPageData struct {
     Todos     []Todo
 }
 
+// Data, sample of some static external data
 var Data = TodoPageData{
     PageTitle: "My TODO list",
     Todos: []Todo{

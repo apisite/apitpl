@@ -9,11 +9,12 @@ import (
 	"github.com/apisite/tpl2x"
 	"github.com/apisite/tpl2x/lookupfs"
 
-	"github.com/apisite/tpl2x/sample"
+	"github.com/apisite/tpl2x/samplefs"
+	"github.com/apisite/tpl2x/samplemeta"
 )
 
 // Render template with layout
-func Example() {
+func Example_execute() {
 
 	// BufferPool size for rendered templates
 	const bufferSize int = 64
@@ -28,13 +29,14 @@ func Example() {
 
 	tfs, err := tpl2x.New(bufferSize).
 		LookupFS(lookupfs.New(cfg).
-			FileSystem(sample.FS())).
+			FileSystem(samplefs.FS())).
 		Parse()
 	if err != nil {
 		log.Fatal(err)
 	}
 	var b bytes.Buffer
-	page := sample.NewMeta(0, "")
+	page := &samplemeta.Meta{}
+	page.SetLayout("default")
 	err = tfs.Execute(&b, "subdir3/page", template.FuncMap{}, page)
 	if err != nil {
 		log.Fatal(err)
