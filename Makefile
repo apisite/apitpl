@@ -49,10 +49,6 @@ cov: coverage.out
 coverage.out: $(SOURCES)
 	$(GO) test -race -coverprofile=$@ -covermode=atomic ./...
 
-#	grep -v "mode: " gin-tpl2x/$@ >> $@
-
-# gin-tpl2x/coverage.out
-
 # internal target
 gin-tpl2x/coverage.out: gin-tpl2x/*.go
 	pushd gin-tpl2x ; \
