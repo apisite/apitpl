@@ -1,7 +1,5 @@
 package gintpl2x_test
 
-// TODO: Make this example runnable at godoc
-
 import (
 	"fmt"
 	"html/template"
@@ -39,7 +37,9 @@ func Example() {
 		Index:      "index",
 		HidePrefix: ".",
 	}
-	fs := lookupfs.New(cfg).FileSystem(sample.FS()) // Here we attach an embedded filesystem
+	// Here we attach an embedded filesystem
+	fs := lookupfs.New(cfg).FileSystem(sample.FS())
+	// Parse all of templates
 	tfs, err := tpl2x.New(bufferSize).Funcs(allFuncs).LookupFS(fs).Parse()
 	if err != nil {
 		log.Fatal(err)
