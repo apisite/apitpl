@@ -5,7 +5,7 @@
  [![codecov][cc1]][cc2]
  [![GoCard][gc1]][gc2]
  [![GitHub Release][gr1]][gr2]
- [![GitHub code size in bytes][sz]]()
+ [![GitHub code size in bytes][sz]]
  [![GitHub license][gl1]][gl2]
 
 [cc1]: https://codecov.io/gh/apisite/tpl2x/branch/master/graph/badge.svg
