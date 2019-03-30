@@ -11,13 +11,18 @@ func TestNewMeta(t *testing.T) {
 	m := NewMeta(http.StatusNotImplemented, "text/plain")
 	assert.Equal(t, "default", m.Layout())
 	assert.Equal(t, http.StatusNotImplemented, m.Status())
-	assert.Equal(t, "text/plain", m.ContentType())
 }
 
 func TestSetTitle(t *testing.T) {
 	m := Meta{}
 	m.SetTitle("title")
 	assert.Equal(t, "title", m.Title)
+}
+
+func TestSetContentType(t *testing.T) {
+	m := Meta{}
+	m.SetContentType("text/plain")
+	assert.Equal(t, "text/plain", m.ContentType())
 }
 
 func TestSetLayout(t *testing.T) {
