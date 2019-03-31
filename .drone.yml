@@ -1,0 +1,18 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: testing
+    image: golang:1.12
+    pull: true
+    commands:
+      - go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+      - go vet
+
+  - name: coverage
+    image: plugins/codecov
+    settings:
+      token:
+        from_secret: my-codecov-token
+      files:
+        - codecov.out
