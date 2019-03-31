@@ -8,7 +8,7 @@ steps:
     commands:
       - go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
       - go vet
-      - bash <(curl -s https://codecov.io/bash) -t "$TOKEN"
+      - curl -s https://codecov.io/bash | bash
     environment:
-      TOKEN:
+      CODECOV_TOKEN:
         from_secret: my-codecov-token
