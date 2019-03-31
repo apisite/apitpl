@@ -19,8 +19,8 @@ const EngineKey = "github.com/apisite/tpl2x"
 // MetaData holds template metadata access methods
 type MetaData interface {
 	tpl2x.MetaData
-	ContentType() string // Return layout name
-	Location() string    // Return redirect url
+	ContentType() string // Returns content type
+	Location() string    // Returns redirect url
 	Status() int         // Response status
 }
 
