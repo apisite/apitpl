@@ -201,8 +201,13 @@ func (lfs *LookupFileSystem) lookupFilesBySuffix() (err error) {
 		// Convert filepath to uri if system is non-POSIX
 		name = filepath.ToSlash(name)
 
+		// Replace /__ with /: (':' used for params in gin)
+		name = strings.ReplaceAll(name, "/__", "/:")
+
 		// Do not begin with a slash
-		name = strings.TrimPrefix(name, "/")
+		if name != "/" {
+			name = strings.TrimPrefix(name, "/")
+		}
 
 		value := File{Path: path, ModTime: f.ModTime()}
 		if strings.HasSuffix(name, lfs.config.Includes) {
