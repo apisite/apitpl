@@ -15,7 +15,7 @@
     ├── err.tmpl
     ├── index.tmpl
     ├── my
-    │   └── :id
+    │   └── __id
     │       └── hello.tmpl
     ├── page.tmpl
     └── redir.tmpl
