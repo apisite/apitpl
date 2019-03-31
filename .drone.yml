@@ -8,11 +8,7 @@ steps:
     commands:
       - go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
       - go vet
-
-  - name: coverage
-    image: plugins/codecov
-    settings:
-      token:
+      - bash <(curl -s https://codecov.io/bash) -t "$TOKEN"
+    environment:
+      TOKEN:
         from_secret: my-codecov-token
-      files:
-        - codecov.out
