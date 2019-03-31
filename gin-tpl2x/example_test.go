@@ -26,7 +26,7 @@ func Example() {
 	l := logrus.New()
 	log := mapper.NewLogger(l)
 
-	allFuncs := make(template.FuncMap, 0)
+	allFuncs := make(template.FuncMap)
 	setProtoFuncs(allFuncs)
 
 	cfg := lookupfs.Config{

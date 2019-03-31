@@ -54,12 +54,11 @@ type File struct {
 
 // LookupFileSystem holds filesystem with template lookup functionality
 type LookupFileSystem struct {
-	config       Config
-	fs           FileSystem
-	Includes     map[string]File
-	Layouts      map[string]File
-	Pages        map[string]File
-	disableCache bool
+	config   Config
+	fs       FileSystem
+	Includes map[string]File
+	Layouts  map[string]File
+	Pages    map[string]File
 }
 
 // New creates LookupFileSystem

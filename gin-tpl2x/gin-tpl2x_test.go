@@ -175,7 +175,7 @@ func mkRouter() *gin.Engine {
 	l, _ := test.NewNullLogger()
 	log := mapper.NewLogger(l)
 
-	allFuncs := make(template.FuncMap, 0)
+	allFuncs := make(template.FuncMap)
 	allFuncs["HTML"] = func(s string) template.HTML {
 		return template.HTML(s)
 	}

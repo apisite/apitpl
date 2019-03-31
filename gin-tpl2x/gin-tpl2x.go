@@ -79,7 +79,7 @@ func (tmpl Template) handleHTML(uri string) gin.HandlerFunc {
 
 // HTML renders page for given uri with context
 func (tmpl Template) HTML(ctx *gin.Context, uri string) {
-	funcs := make(template.FuncMap, 0)
+	funcs := make(template.FuncMap)
 	page := (tmpl.RequestHandler)(ctx, funcs)
 	content := tmpl.fs.RenderContent(uri, funcs, page)
 	if page.Status() == http.StatusMovedPermanently || page.Status() == http.StatusFound {

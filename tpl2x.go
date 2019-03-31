@@ -224,8 +224,11 @@ func (tfs TemplateService) Render(w io.Writer, funcs template.FuncMap, data Meta
 	if name == "" {
 		// No layout needed
 		if content != nil {
-			content.WriteTo(w)
+			_, err := content.WriteTo(w)
 			tfs.bufPool.Put(content)
+			if err != nil {
+				data.SetError(err)
+			}
 		}
 		return nil
 	}
@@ -253,6 +256,9 @@ func (tfs TemplateService) Render(w io.Writer, funcs template.FuncMap, data Meta
 	if err != nil {
 		return errors.Wrap(err, "exec layout")
 	}
-	buf.WriteTo(w)
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		return errors.Wrap(err, "exec layout write")
+	}
 	return nil
 }

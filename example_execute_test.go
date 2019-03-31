@@ -41,7 +41,10 @@ func Example_execute() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	b.WriteTo(os.Stdout)
+	_, err = b.WriteTo(os.Stdout)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Output:
 	// <title>Template title</title>
