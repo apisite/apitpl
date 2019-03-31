@@ -24,7 +24,7 @@
 * Текущая версия: 0.2.1
 * Планы до релиза (v 1.0):
   * [ ] актуализировать документацию
-  * [ ] определиться с именем репозитория
+  * [ ] определиться с именем репозитория (apitpl? tpltree?)
   * [ ] решить вопрос хранения имени метода `content` 
 
 Библиотека предназначена для построения вебсайтов, у которых дерево страниц (или его часть) совпадает с деревом файлов (шаблонов страниц) в некотором каталоге. Первичным таким проектом является [apisite](https://github.com/apisite/apisite), где шаблоны получают данные с помощью вызовов API и страницы может формировать универсальный обработчик.
@@ -100,7 +100,7 @@
 
 Библиотека содержит базовый пример такой структуры - [samplemeta](https://github.com/apisite/tpl2x/blob/master/samplemeta/meta.go).
 
-В [gin-tpl2x](https://godoc.org/github.com/apisite/tpl2x/gin-tpl2x) в интерфейс [gintpl2x.MetaData](https://godoc.org/github.com/apisite/tpl2x/gin-tpl2x#MetaData) добавлены еще три метода для формирования заголовка HTTP-ответа:
+В [gin-tpl2x](https://godoc.org/github.com/apisite/tpl2x/gin-tpl2x) интерфейс [gintpl2x.MetaData](https://godoc.org/github.com/apisite/tpl2x/gin-tpl2x#MetaData) дополнен функциями для формирования заголовка HTTP-ответа:
 
 * `Status() int` - статус
 * `ContentType() string` - тип контента
