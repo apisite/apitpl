@@ -6,9 +6,8 @@ steps:
     image: golang:1.12
     pull: true
     commands:
-      - go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
-      - pushd gin-tpl2x && go test -v -race -coverprofile=coverage.out -covermode=atomic ./... && popd
-      - go vet
+      - go test -v -race -coverprofile=coverage.out -covermode=atomic ./... ./gin-tpl2x/...
+      - go vet ./... ./gin-tpl2x/...
       - curl -s https://codecov.io/bash | bash
     environment:
       CODECOV_TOKEN:
