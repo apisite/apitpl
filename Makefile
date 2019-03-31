@@ -42,12 +42,18 @@ gin-tpl2x/samplefs/resource.go: $(shell find gin-tpl2x/testdata | sed -E 's/:/\\
 
 # ------------------------------------------------------------------------------
 
+## run linter
+lint:
+	golangci-lint run ./... ./gin-tpl2x/...
+
+# ------------------------------------------------------------------------------
+
 ## run tests and fill coverage.out
 cov: coverage.out
 
 # internal target
 coverage.out: $(SOURCES)
-	$(GO) test -race -coverprofile=$@ -covermode=atomic ./...
+	$(GO) test -race -coverprofile=$@ -covermode=atomic ./... ./gin-tpl2x/...
 
 # internal target
 gin-tpl2x/coverage.out: gin-tpl2x/*.go
