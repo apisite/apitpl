@@ -129,7 +129,7 @@ func (lfs LookupFileSystem) ReadFile(name string) (string, error) {
 	return s, nil
 }
 
-func (lfs LookupFileSystem) walk(tag, prefix string, files *map[string]File) (err error) {
+func (lfs LookupFileSystem) walk(tag, prefix string, files map[string]File) (err error) {
 
 	root := filepath.Join(lfs.config.Root, prefix)
 	err = lfs.fs.Walk(root, func(path string, f os.FileInfo, err error) error {
@@ -158,7 +158,7 @@ func (lfs LookupFileSystem) walk(tag, prefix string, files *map[string]File) (er
 		}
 
 		//fmt.Printf("Found %s -> %s\n", name, path)
-		(*files)[name] = File{Path: path, ModTime: f.ModTime()}
+		files[name] = File{Path: path, ModTime: f.ModTime()}
 		return nil
 	})
 	if err != nil {
@@ -170,14 +170,14 @@ func (lfs LookupFileSystem) walk(tag, prefix string, files *map[string]File) (er
 func (lfs *LookupFileSystem) lookupFilesByPrefix() (err error) {
 
 	if lfs.config.Includes != "" {
-		if err = lfs.walk("includes", lfs.config.Includes, &lfs.Includes); err != nil {
+		if err = lfs.walk("includes", lfs.config.Includes, lfs.Includes); err != nil {
 			return
 		}
 	}
-	if err = lfs.walk("layouts", lfs.config.Layouts, &lfs.Layouts); err != nil {
+	if err = lfs.walk("layouts", lfs.config.Layouts, lfs.Layouts); err != nil {
 		return
 	}
-	if err = lfs.walk("pages", lfs.config.Pages, &lfs.Pages); err != nil {
+	if err = lfs.walk("pages", lfs.config.Pages, lfs.Pages); err != nil {
 		return
 	}
 

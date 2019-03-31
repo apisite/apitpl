@@ -18,8 +18,8 @@ import (
 type TemplateService struct {
 	lfs              *lookupfs.LookupFileSystem
 	funcMap          template.FuncMap
-	layouts          *map[string]*template.Template
-	pages            *map[string]*template.Template
+	layouts          map[string]*template.Template
+	pages            map[string]*template.Template
 	baseTemplate     *template.Template
 	bufPool          *bpool.BufferPool
 	useCustomContent bool
@@ -96,8 +96,8 @@ func (tfs *TemplateService) Parse() (*TemplateService, error) {
 	}
 
 	tfs.baseTemplate = includes
-	tfs.layouts = layouts
-	tfs.pages = pages
+	tfs.layouts = *layouts
+	tfs.pages = *pages
 	return tfs, nil
 }
 
@@ -189,7 +189,7 @@ func (tfs TemplateService) RenderContent(name string, funcs template.FuncMap, da
 		}
 	} else {
 		var ok bool
-		tmpl, ok = (*tfs.pages)[name] // TODO: tfs.Lookup(tfs.pages, name)
+		tmpl, ok = tfs.pages[name] // TODO: tfs.Lookup(tfs.pages, name)
 		if !ok {
 			err = fmt.Errorf("The page %s does not exist.", name)
 			data.SetError(err)
@@ -208,11 +208,11 @@ func (tfs TemplateService) RenderContent(name string, funcs template.FuncMap, da
 
 // layout returns metadata layout (if exists) or default layout otherwise
 func (tfs TemplateService) layout(name string, data MetaData) *template.Template {
-	tmpl, ok := (*tfs.layouts)[name]
+	tmpl, ok := tfs.layouts[name]
 	if !ok {
 		err := fmt.Errorf("layout %s does not exist", name)
 		data.SetError(err)
-		tmpl = (*tfs.layouts)[tfs.lfs.DefaultLayout()]
+		tmpl = tfs.layouts[tfs.lfs.DefaultLayout()]
 	}
 	return tmpl
 }
@@ -239,7 +239,7 @@ func (tfs TemplateService) Render(w io.Writer, funcs template.FuncMap, data Meta
 		if err != nil {
 			data.SetError(err)
 			// TODO: parse default layout?
-			tmpl = (*tfs.layouts)[tfs.lfs.DefaultLayout()]
+			tmpl = tfs.layouts[tfs.lfs.DefaultLayout()]
 		}
 	} else {
 		tmpl = tfs.layout(name, data)
