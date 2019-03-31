@@ -3,11 +3,14 @@
 
 [![GoDoc][gd1]][gd2]
  [![codecov][cc1]][cc2]
+ [![Build Status][bs1]][bs2]
  [![GoCard][gc1]][gc2]
  [![GitHub Release][gr1]][gr2]
  ![GitHub code size in bytes][sz]
  [![GitHub license][gl1]][gl2]
 
+[bs1]: https://cloud.drone.io/api/badges/apisite/tpl2x/status.svg
+[bs2]: https://cloud.drone.io/apisite/tpl2x
 [cc1]: https://codecov.io/gh/apisite/tpl2x/branch/master/graph/badge.svg
 [cc2]: https://codecov.io/gh/apisite/tpl2x
 [gd1]: https://godoc.org/github.com/apisite/tpl2x?status.svg
