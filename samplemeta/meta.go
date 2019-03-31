@@ -27,7 +27,7 @@ func (m *Meta) SetLayout(name string) string { m.layout = name; return "" }
 func (m *Meta) SetStatus(status int) string { m.status = status; return "" }
 
 // SetContentType - set page content type
-func (p *Meta) SetContentType(name string) string { p.contentType = name; return "" }
+func (m *Meta) SetContentType(name string) string { m.contentType = name; return "" }
 
 // Layout returns page layout
 func (m Meta) Layout() string { return m.layout }
