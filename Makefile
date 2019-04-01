@@ -55,12 +55,6 @@ cov: coverage.out
 coverage.out: $(SOURCES)
 	$(GO) test -race -coverprofile=$@ -covermode=atomic ./... ./gin-tpl2x/...
 
-# internal target
-gin-tpl2x/coverage.out: gin-tpl2x/*.go
-	pushd gin-tpl2x ; \
-	$(GO) test -race -coverprofile=coverage.out -covermode=atomic ; \
-	popd
-
 ## make coverage.out and send it to codecov.io
 cov-push: cov
 	bash <(curl -s https://codecov.io/bash) -t $(CODECOV_KEY)
@@ -71,7 +65,6 @@ cov-html: cov
 
 cov-clean:
 	rm -f coverage.out
-	rm -f gin-tpl2x/coverage.out
 
 # ------------------------------------------------------------------------------
 
