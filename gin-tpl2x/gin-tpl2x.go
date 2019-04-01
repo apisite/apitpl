@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gopkg.in/birkirb/loggers.v1"
 
-	"github.com/apisite/tpl2x" // TODO: stop tpl2x.MetaData usage
+	"github.com/apisite/tpl2x"
 )
 
 // EngineKey holds gin context key name for engine storage

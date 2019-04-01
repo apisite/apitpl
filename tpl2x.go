@@ -26,13 +26,6 @@ type TemplateService struct {
 	parseAlways      bool
 }
 
-// MetaData holds template metadata access methods
-type MetaData interface {
-	Error() error   // Template exec error
-	SetError(error) // Store unhandler template error
-	Layout() string // Return layout name
-}
-
 // New creates TemplateService with BufferPool of given size
 func New(size int) (tfs *TemplateService) {
 	tfs = &TemplateService{
@@ -170,6 +163,13 @@ func (tfs TemplateService) parseTemplateWithDeps(items map[string]lookupfs.File,
 		return nil, err
 	}
 	return tfs.parseTemplate(includes, name, f)
+}
+
+// MetaData holds template metadata access methods
+type MetaData interface {
+	Error() error   // Template exec error
+	SetError(error) // Store unhandler template error
+	Layout() string // Return layout name
 }
 
 // Execute renders page content and layout
