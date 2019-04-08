@@ -1,4 +1,11 @@
-# apitpl
+<p align="center">
+  <span>English</span> |
+  <a href="README.ru.md#apisiteapitpl">Pусский</a>
+</p>
+
+---
+
+# apisite/apitpl
 > golang template engine which renders templates by executing them 2 times, one for content and another one for layout
 
 [![GoDoc][gd1]][gd2]
