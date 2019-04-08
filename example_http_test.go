@@ -1,4 +1,4 @@
-package tpl2x_test
+package apitpl_test
 
 import (
 	"fmt"
@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/apisite/tpl2x"
-	"github.com/apisite/tpl2x/lookupfs"
+	"github.com/apisite/apitpl"
+	"github.com/apisite/apitpl/lookupfs"
 
-	"github.com/apisite/tpl2x/samplefs"
-	"github.com/apisite/tpl2x/samplemeta"
+	"github.com/apisite/apitpl/samplefs"
+	"github.com/apisite/apitpl/samplemeta"
 )
 
 // Handle set of templates via http
@@ -35,7 +35,7 @@ func Example_http() {
 		"content": func() template.HTML { return template.HTML("") },
 	}
 
-	tfs, err := tpl2x.New(bufferSize).
+	tfs, err := apitpl.New(bufferSize).
 		Funcs(funcs).
 		LookupFS(
 			lookupfs.New(cfg).
@@ -72,7 +72,7 @@ func Example_http() {
 }
 
 // handleHTML returns page handler
-func handleHTML(tfs *tpl2x.TemplateService, uri string) func(w http.ResponseWriter, r *http.Request) {
+func handleHTML(tfs *apitpl.TemplateService, uri string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//		log.Debugf("Handling page (%s)", uri)
 

@@ -1,9 +1,9 @@
-module github.com/apisite/tpl2x/gin-tpl2x
+module github.com/apisite/apitpl/ginapitpl
 
 go 1.12
 
 require (
-	github.com/apisite/tpl2x v0.2.1
+	github.com/apisite/apitpl v0.2.1
 	github.com/birkirb/loggers-mapper-logrus v0.0.0-20180326232643-461f2d8e6f72
 	github.com/blang/vfs v1.0.0 // indirect
 	github.com/daaku/go.zipexe v1.0.0 // indirect

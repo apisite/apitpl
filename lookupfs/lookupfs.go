@@ -1,4 +1,4 @@
-// Package lookupfs implements a filesystem backend for tpl2x.
+// Package lookupfs implements a filesystem backend for apitpl.
 // It can use native filesystem (by default) or embedded filesystem (which can be set via FileSystem func).
 package lookupfs
 

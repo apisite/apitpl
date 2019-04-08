@@ -1,4 +1,4 @@
-package tpl2x_test
+package apitpl_test
 
 import (
 	"bytes"
@@ -6,11 +6,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/apisite/tpl2x"
-	"github.com/apisite/tpl2x/lookupfs"
+	"github.com/apisite/apitpl"
+	"github.com/apisite/apitpl/lookupfs"
 
-	"github.com/apisite/tpl2x/samplefs"
-	"github.com/apisite/tpl2x/samplemeta"
+	"github.com/apisite/apitpl/samplefs"
+	"github.com/apisite/apitpl/samplemeta"
 )
 
 // Render template with layout
@@ -27,7 +27,7 @@ func Example_execute() {
 		DefLayout: "default",
 	}
 
-	tfs, err := tpl2x.New(bufferSize).
+	tfs, err := apitpl.New(bufferSize).
 		LookupFS(lookupfs.New(cfg).
 			FileSystem(samplefs.FS())).
 		Parse()

@@ -1,5 +1,5 @@
-// Package gintpl2x implements a gin frontend for tpl2x.
-package gintpl2x
+// Package ginapitpl implements a gin frontend for apitpl.
+package ginapitpl
 
 import (
 	"bytes"
@@ -10,25 +10,25 @@ import (
 	"github.com/gin-gonic/gin"
 	"gopkg.in/birkirb/loggers.v1"
 
-	"github.com/apisite/tpl2x"
+	"github.com/apisite/apitpl"
 )
 
 // EngineKey holds gin context key name for engine storage
-const EngineKey = "github.com/apisite/tpl2x"
+const EngineKey = "github.com/apisite/apitpl"
 
 // MetaData holds template metadata access methods
 type MetaData interface {
-	tpl2x.MetaData
+	apitpl.MetaData
 	ContentType() string // Returns content type
 	Location() string    // Returns redirect url
 	Status() int         // Response status
 }
 
-// TemplateService allows to replace tpl2x functionality with the other package
+// TemplateService allows to replace apitpl functionality with the other package
 type TemplateService interface {
 	PageNames(hide bool) []string
-	Render(w io.Writer, funcs template.FuncMap, data tpl2x.MetaData, content *bytes.Buffer) (err error)
-	RenderContent(name string, funcs template.FuncMap, data tpl2x.MetaData) *bytes.Buffer
+	Render(w io.Writer, funcs template.FuncMap, data apitpl.MetaData, content *bytes.Buffer) (err error)
+	RenderContent(name string, funcs template.FuncMap, data apitpl.MetaData) *bytes.Buffer
 }
 
 // Template holds template engine attributes

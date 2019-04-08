@@ -1,4 +1,4 @@
-# github.com/apisite/tpl2x testdata
+# github.com/apisite/apitpl testdata
 > Templates used in tests and examples
 
 ```

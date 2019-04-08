@@ -1,6 +1,6 @@
-// Package tpl2x implements template engine
+// Package apitpl implements template engine
 // which renders templates by executing them 2 times, one for content and another one for layout.
-package tpl2x
+package apitpl
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 
 	"github.com/oxtoacart/bpool"
 
-	"github.com/apisite/tpl2x/lookupfs"
+	"github.com/apisite/apitpl/lookupfs"
 )
 
 // TemplateService holds templates data & methods

@@ -1,4 +1,4 @@
-# tpl2x
+# apitpl
 > golang template engine which renders templates by executing them 2 times, one for content and another one for layout
 
 [![GoDoc][gd1]][gd2]
@@ -9,18 +9,18 @@
  ![GitHub code size in bytes][sz]
  [![GitHub license][gl1]][gl2]
 
-[bs1]: https://cloud.drone.io/api/badges/apisite/tpl2x/status.svg
-[bs2]: https://cloud.drone.io/apisite/tpl2x
-[cc1]: https://codecov.io/gh/apisite/tpl2x/branch/master/graph/badge.svg
-[cc2]: https://codecov.io/gh/apisite/tpl2x
-[gd1]: https://godoc.org/github.com/apisite/tpl2x?status.svg
-[gd2]: https://godoc.org/github.com/apisite/tpl2x
-[gc1]: https://goreportcard.com/badge/github.com/apisite/tpl2x
-[gc2]: https://goreportcard.com/report/github.com/apisite/tpl2x
-[gr1]: https://img.shields.io/github/release-pre/apisite/tpl2x.svg
-[gr2]: https://github.com/apisite/tpl2x/releases
-[sz]: https://img.shields.io/github/languages/code-size/apisite/tpl2x.svg
-[gl1]: https://img.shields.io/github/license/apisite/tpl2x.svg
+[bs1]: https://cloud.drone.io/api/badges/apisite/apitpl/status.svg
+[bs2]: https://cloud.drone.io/apisite/apitpl
+[cc1]: https://codecov.io/gh/apisite/apitpl/branch/master/graph/badge.svg
+[cc2]: https://codecov.io/gh/apisite/apitpl
+[gd1]: https://godoc.org/github.com/apisite/apitpl?status.svg
+[gd2]: https://godoc.org/github.com/apisite/apitpl
+[gc1]: https://goreportcard.com/badge/github.com/apisite/apitpl
+[gc2]: https://goreportcard.com/report/github.com/apisite/apitpl
+[gr1]: https://img.shields.io/github/release-pre/apisite/apitpl.svg
+[gr2]: https://github.com/apisite/apitpl/releases
+[sz]: https://img.shields.io/github/languages/code-size/apisite/apitpl.svg
+[gl1]: https://img.shields.io/github/license/apisite/apitpl.svg
 [gl2]: LICENSE
 
 * Project status: MVP is ready
@@ -38,7 +38,7 @@ If page content template returns HTML, at step 2, layout template will be called
 1. Adding template file without source recompiling
 2. Support plain HTML body as template (adding layout without additional markup in content)
 3. Attach all (pages,layouts,includes) templates at start (see lookupfs)
-4. Auto create routes for all page templates allowing them get required data via api (see gin-tpl2x)
+4. Auto create routes for all page templates allowing them get required data via api (see ginapitpl)
 
 ## Request processing flow
 
@@ -74,8 +74,8 @@ Routes for all page URI should be set in `Route()` call after that.
 You can enable per request templates parsing for debugging purposes via `ParseAlways(true)` but you still have to restart your program for adding or removing any template file.
 
 ### See also
-* [Package examples](https://godoc.org/github.com/apisite/tpl2x#pkg-examples)
-* [gin-tpl2x](https://github.com/apisite/tpl2x/gin-tpl2x) - [gin](https://github.com/gin-gonic/gin) bindings for this package
+* [Package examples](https://godoc.org/github.com/apisite/apitpl#pkg-examples)
+* [ginapitpl](https://github.com/apisite/apitpl/ginapitpl) - [gin](https://github.com/gin-gonic/gin) bindings for this package
 
 ### Template methods
 Get http.Request data

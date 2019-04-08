@@ -1,4 +1,4 @@
-module github.com/apisite/tpl2x
+module github.com/apisite/apitpl
 
 go 1.12
 
@@ -19,4 +19,4 @@ require (
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
 
-replace github.com/apisite/tpl2x/gin-tpl2x => ./gin-tpl2x
+replace github.com/apisite/apitpl/ginapitpl => ./ginapitpl

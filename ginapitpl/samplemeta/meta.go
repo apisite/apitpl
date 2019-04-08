@@ -5,7 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"net/http"
 
-	base "github.com/apisite/tpl2x/samplemeta"
+	base "github.com/apisite/apitpl/samplemeta"
 )
 
 // ErrRedirect is an error returned when page needs to be redirected

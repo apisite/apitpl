@@ -1,4 +1,4 @@
-package tpl2x
+package apitpl
 
 import (
 	"bytes"
@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/apisite/tpl2x/lookupfs"
-	"github.com/apisite/tpl2x/samplemeta"
+	"github.com/apisite/apitpl/lookupfs"
+	"github.com/apisite/apitpl/samplemeta"
 )
 
 type ServerSuite struct {

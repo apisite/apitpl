@@ -1,4 +1,4 @@
-package gintpl2x
+package ginapitpl
 
 import (
 	"fmt"
@@ -12,10 +12,10 @@ import (
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apisite/tpl2x"
-	"github.com/apisite/tpl2x/lookupfs"
+	"github.com/apisite/apitpl"
+	"github.com/apisite/apitpl/lookupfs"
 
-	"github.com/apisite/tpl2x/gin-tpl2x/samplemeta"
+	"github.com/apisite/apitpl/ginapitpl/samplemeta"
 )
 
 func TestRender(t *testing.T) {
@@ -192,7 +192,7 @@ func mkRouter() *gin.Engine {
 		HidePrefix: ".",
 	}
 	fs := lookupfs.New(cfg)
-	tfs, err := tpl2x.New(bufferSize).Funcs(allFuncs).LookupFS(fs).Parse()
+	tfs, err := apitpl.New(bufferSize).Funcs(allFuncs).LookupFS(fs).Parse()
 	if err != nil {
 		log.Fatal(err)
 	}

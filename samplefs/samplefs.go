@@ -1,4 +1,4 @@
-// Package samplefs implements a sample embedded template filesystem for tests and examples for tpl2x.
+// Package samplefs implements a sample embedded template filesystem for tests and examples for apitpl.
 package samplefs
 
 // Generate resource.go by [parcello](github.com/phogolabs/parcello) from ../testdata, used only in example_*.go

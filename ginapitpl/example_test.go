@@ -1,4 +1,4 @@
-package gintpl2x_test
+package ginapitpl_test
 
 import (
 	"fmt"
@@ -10,12 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	"github.com/apisite/tpl2x"
-	"github.com/apisite/tpl2x/gin-tpl2x"
-	"github.com/apisite/tpl2x/lookupfs"
+	"github.com/apisite/apitpl"
+	"github.com/apisite/apitpl/ginapitpl"
+	"github.com/apisite/apitpl/lookupfs"
 
-	"github.com/apisite/tpl2x/gin-tpl2x/samplefs"
-	"github.com/apisite/tpl2x/gin-tpl2x/samplemeta"
+	"github.com/apisite/apitpl/ginapitpl/samplefs"
+	"github.com/apisite/apitpl/ginapitpl/samplemeta"
 )
 
 func Example() {
@@ -41,12 +41,12 @@ func Example() {
 	// Here we attach an embedded filesystem
 	fs := lookupfs.New(cfg).FileSystem(samplefs.FS())
 	// Parse all of templates
-	tfs, err := tpl2x.New(bufferSize).Funcs(allFuncs).LookupFS(fs).Parse()
+	tfs, err := apitpl.New(bufferSize).Funcs(allFuncs).LookupFS(fs).Parse()
 	if err != nil {
 		log.Fatal(err)
 	}
-	gintpl := gintpl2x.New(log, tfs)
-	gintpl.RequestHandler = func(ctx *gin.Context, funcs template.FuncMap) gintpl2x.MetaData {
+	gintpl := ginapitpl.New(log, tfs)
+	gintpl.RequestHandler = func(ctx *gin.Context, funcs template.FuncMap) ginapitpl.MetaData {
 		setRequestFuncs(funcs, ctx)
 		page := samplemeta.NewMeta(http.StatusOK, "text/html; charset=utf-8")
 		return page

@@ -4,7 +4,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 
-	"github.com/apisite/tpl2x/lookupfs"
+	"github.com/apisite/apitpl/lookupfs"
 )
 
 func TestFS(t *testing.T) {
