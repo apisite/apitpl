@@ -228,7 +228,7 @@ func (lfs *LookupFileSystem) lookupFilesBySuffix() (err error) {
 
 // mapKeys returns sorted map keys
 func mapKeys(m map[string]File, prefix string, hide bool) []string {
-	keys := make([]string, 0) // len depends on hide
+	var keys []string // len depends on hide
 	for k := range m {
 		if hide && (strings.HasPrefix(k, prefix) || strings.Contains(k, "/"+prefix)) {
 			// Skip hidden pages
