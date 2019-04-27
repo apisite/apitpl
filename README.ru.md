@@ -13,7 +13,8 @@
  [![Build Status][bs1]][bs2]
  [![GoCard][gc1]][gc2]
  [![GitHub Release][gr1]][gr2]
- ![GitHub code size in bytes][sz]
+ [![LoC][loc1]][loc2]
+ [![GitHub code size in bytes][sz]]()
  [![GitHub license][gl1]][gl2]
 
 [bs1]: https://cloud.drone.io/api/badges/apisite/apitpl/status.svg
@@ -27,6 +28,8 @@
 [gr1]: https://img.shields.io/github/release-pre/apisite/apitpl.svg
 [gr2]: https://github.com/apisite/apitpl/releases
 [sz]: https://img.shields.io/github/languages/code-size/apisite/apitpl.svg
+[loc1]: .loc.svg "Lines of Code"
+[loc2]: LOC.md
 [gl1]: https://img.shields.io/github/license/apisite/apitpl.svg
 [gl2]: LICENSE
 
