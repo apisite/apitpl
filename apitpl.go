@@ -14,6 +14,8 @@ import (
 	"github.com/apisite/apitpl/lookupfs"
 )
 
+// codebeat:disable[TOO_MANY_IVARS]
+
 // TemplateService holds templates data & methods
 type TemplateService struct {
 	lfs              *lookupfs.LookupFileSystem
@@ -25,6 +27,8 @@ type TemplateService struct {
 	useCustomContent bool
 	parseAlways      bool
 }
+
+// codebeat:enable[TOO_MANY_IVARS]
 
 // New creates TemplateService with BufferPool of given size
 func New(size int) (tfs *TemplateService) {
