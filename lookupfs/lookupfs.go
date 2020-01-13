@@ -13,6 +13,8 @@ import (
 	"time"
 )
 
+// codebeat:disable[TOO_MANY_IVARS]
+
 // Config holds config variables and its defaults
 type Config struct {
 	Root       string `long:"templates" default:"tmpl/" description:"Templates root path"`
@@ -25,6 +27,8 @@ type Config struct {
 	DefLayout  string `long:"def_layout" default:"default" description:"Default layout template"`
 	HidePrefix string `long:"hide_prefix" default:"." description:"Treat files with this prefix as hidden"`
 }
+
+// codebeat:enable[TOO_MANY_IVARS]
 
 type defaultFS struct{}
 
