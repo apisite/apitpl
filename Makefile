@@ -19,21 +19,6 @@ all: help
 # ------------------------------------------------------------------------------
 ## Sources
 
-## Generate embedded filesystems for tests
-gen: samplefs/resource.go ginapitpl/samplefs/resource.go
-
-# internal target
-samplefs/resource.go: $(shell find testdata)
-	@pushd $(@D) ; \
-	go generate ; \
-	popd
-
-# internal target
-ginapitpl/samplefs/resource.go: $(shell find ginapitpl/testdata | sed -E 's/:/\\:/')
-	@pushd $(@D) ; \
-	go generate ; \
-	popd
-
 ## Run linters
 lint:
 	golint ./...
@@ -44,7 +29,7 @@ cov: coverage.out
 
 # internal target
 coverage.out: $(SOURCES)
-	$(GO) test -race -coverprofile=$@ -covermode=atomic ./... ./ginapitpl/...
+	$(GO) test -race -coverprofile=$@ -covermode=atomic ./...
 
 ## Open coverage report in browser
 cov-html: cov

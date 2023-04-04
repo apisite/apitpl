@@ -2,6 +2,8 @@ package apitpl_test
 
 import (
 	"bytes"
+	"embed"
+	"io/fs"
 	"html/template"
 	"log"
 	"os"
@@ -9,9 +11,11 @@ import (
 	"github.com/apisite/apitpl"
 	"github.com/apisite/apitpl/lookupfs"
 
-	"github.com/apisite/apitpl/samplefs"
 	"github.com/apisite/apitpl/samplemeta"
 )
+
+//go:embed testdata/*
+var embedFS embed.FS
 
 // Render template with layout
 func Example_execute() {
@@ -26,10 +30,10 @@ func Example_execute() {
 		Ext:       ".html",
 		DefLayout: "default",
 	}
-
+	embedDirFS,_ := fs.Sub(embedFS, "testdata")
 	tfs, err := apitpl.New(bufferSize).
 		LookupFS(lookupfs.New(cfg).
-			FileSystem(samplefs.FS())).
+			FileSystem(embedDirFS)).
 		Parse()
 	if err != nil {
 		log.Fatal(err)

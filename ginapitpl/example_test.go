@@ -1,7 +1,9 @@
 package ginapitpl_test
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"html/template"
 	"net/http"
 	"net/http/httptest"
@@ -14,9 +16,11 @@ import (
 	"github.com/apisite/apitpl/ginapitpl"
 	"github.com/apisite/apitpl/lookupfs"
 
-	"github.com/apisite/apitpl/ginapitpl/samplefs"
 	"github.com/apisite/apitpl/ginapitpl/samplemeta"
 )
+
+//go:embed testdata/*
+var embedFS embed.FS
 
 func Example() {
 
@@ -39,9 +43,10 @@ func Example() {
 		HidePrefix: ".",
 	}
 	// Here we attach an embedded filesystem
-	fs := lookupfs.New(cfg).FileSystem(samplefs.FS())
+	embedDirFS,_ := fs.Sub(embedFS, "testdata")
+	lfs := lookupfs.New(cfg).FileSystem(embedDirFS)
 	// Parse all of templates
-	tfs, err := apitpl.New(bufferSize).Funcs(allFuncs).LookupFS(fs).Parse()
+	tfs, err := apitpl.New(bufferSize).Funcs(allFuncs).LookupFS(lfs).Parse()
 	if err != nil {
 		log.Fatal(err)
 	}

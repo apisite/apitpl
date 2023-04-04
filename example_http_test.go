@@ -2,6 +2,7 @@ package apitpl_test
 
 import (
 	"fmt"
+	"io/fs"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 	"github.com/apisite/apitpl"
 	"github.com/apisite/apitpl/lookupfs"
 
-	"github.com/apisite/apitpl/samplefs"
+//	samplefs "github.com/apisite/apitpl/testdata"
 	"github.com/apisite/apitpl/samplemeta"
 )
 
@@ -35,11 +36,12 @@ func Example_http() {
 		"content": func() template.HTML { return template.HTML("") },
 	}
 
+	embedDirFS,_ := fs.Sub(embedFS, "testdata")
 	tfs, err := apitpl.New(bufferSize).
 		Funcs(funcs).
 		LookupFS(
 			lookupfs.New(cfg).
-				FileSystem(samplefs.FS())).
+				FileSystem(embedDirFS)).
 		ParseAlways(true).
 		Parse()
 	if err != nil {

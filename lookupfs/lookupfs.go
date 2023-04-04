@@ -4,8 +4,9 @@ package lookupfs
 
 import (
 	"github.com/pkg/errors"
+	"io/fs"
 	"io/ioutil"
-	"net/http"
+//	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
@@ -32,11 +33,11 @@ type Config struct {
 
 type defaultFS struct{}
 
-func (fs defaultFS) Walk(path string, wf filepath.WalkFunc) error {
-	return filepath.Walk(path, wf)
+func (dfs defaultFS) Walk(path string, wf fs.WalkDirFunc) error {
+	return fs.WalkDir(dfs, path, wf)
 }
 
-func (fs defaultFS) Open(name string) (http.File, error) {
+func (dfs defaultFS) Open(name string) (fs.File, error) {
 	f, err := os.Open(name)
 	if err != nil {
 		return nil, err // TODO: What with mapDirOpenError(err, fullName)?
@@ -46,8 +47,8 @@ func (fs defaultFS) Open(name string) (http.File, error) {
 
 // FileSystem holds all of used filesystem access methods
 type FileSystem interface {
-	Walk(root string, walkFn filepath.WalkFunc) error
-	Open(name string) (http.File, error)
+//	Walk(root string, walkFn filepath.WalkFunc) error
+	Open(name string) (fs.File, error)
 }
 
 // File holds file metadata
@@ -136,7 +137,7 @@ func (lfs LookupFileSystem) ReadFile(name string) (string, error) {
 func (lfs LookupFileSystem) walk(tag, prefix string, files map[string]File) (err error) {
 
 	root := filepath.Join(lfs.config.Root, prefix)
-	err = lfs.fs.Walk(root, func(path string, f os.FileInfo, err error) error {
+	err = fs.WalkDir(lfs.fs, root, func(path string, f fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -162,7 +163,8 @@ func (lfs LookupFileSystem) walk(tag, prefix string, files map[string]File) (err
 		}
 
 		//fmt.Printf("Found %s -> %s\n", name, path)
-		files[name] = File{Path: path, ModTime: f.ModTime()}
+		info,_ := f.Info()
+		files[name] = File{Path: path, ModTime: info.ModTime()}
 		return nil
 	})
 	if err != nil {
@@ -190,7 +192,7 @@ func (lfs *LookupFileSystem) lookupFilesByPrefix() (err error) {
 
 func (lfs *LookupFileSystem) lookupFilesBySuffix() (err error) {
 
-	err = lfs.fs.Walk(lfs.config.Root, func(path string, f os.FileInfo, err error) error {
+	err = fs.WalkDir(lfs.fs, lfs.config.Root, func(path string, f fs.DirEntry, err error) error {
 		if err != nil {
 			return errors.Wrap(err, "walk error")
 		}
@@ -212,7 +214,8 @@ func (lfs *LookupFileSystem) lookupFilesBySuffix() (err error) {
 			name = strings.TrimPrefix(name, "/")
 		}
 
-		value := File{Path: path, ModTime: f.ModTime()}
+		info,_ := f.Info()
+		value := File{Path: path, ModTime: info.ModTime()}
 		if strings.HasSuffix(name, lfs.config.Includes) {
 			lfs.Includes[strings.TrimSuffix(name, lfs.config.Includes)] = value
 		} else if strings.HasSuffix(name, lfs.config.Layouts) {

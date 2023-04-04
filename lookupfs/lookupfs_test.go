@@ -28,10 +28,10 @@ func TestNewErrors(t *testing.T) {
 		cfg  Config
 		err  string
 	}{
-		{name: "PrefixNoIncludesDir", cfg: Config{Includes: "404"}, err: "includes walk failed: lstat"},
-		{name: "PrefixNoLayoutDir", cfg: Config{Includes: "includes", Layouts: "404"}, err: "layouts walk failed: lstat"},
-		{name: "PrefixNoPageDir", cfg: Config{Includes: "includes", Layouts: "layouts", Pages: "404"}, err: "pages walk failed: lstat"},
-		{name: "SuffixNoFiles", cfg: Config{UseSuffix: true, Root: filepath.Join(dir, "404")}, err: "walk failed: walk error: lstat"},
+		{name: "PrefixNoIncludesDir", cfg: Config{Includes: "404"}, err: "includes walk failed: open"},
+		{name: "PrefixNoLayoutDir", cfg: Config{Includes: "includes", Layouts: "404"}, err: "layouts walk failed: open"},
+		{name: "PrefixNoPageDir", cfg: Config{Includes: "includes", Layouts: "layouts", Pages: "404"}, err: "pages walk failed: open"},
+		{name: "SuffixNoFiles", cfg: Config{UseSuffix: true, Root: filepath.Join(dir, "404")}, err: "walk failed: walk error: open"},
 	}
 	for _, tt := range tests {
 		if tt.cfg.Root == "" {
