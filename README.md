@@ -18,8 +18,8 @@
 
 [cc1]: https://codecov.io/gh/apisite/apitpl/branch/master/graph/badge.svg
 [cc2]: https://codecov.io/gh/apisite/apitpl
-[gd1]: https://godoc.org/github.com/apisite/apitpl?status.svg
-[gd2]: https://godoc.org/github.com/apisite/apitpl
+[gd1]: https://pkg.go.dev/badge/github.com/apisite/apitpl
+[gd2]: https://pkg.go.dev/github.com/apisite/apitpl?
 [gc1]: https://goreportcard.com/badge/github.com/apisite/apitpl
 [gc2]: https://goreportcard.com/report/github.com/apisite/apitpl
 [gr1]: https://img.shields.io/github/release-pre/apisite/apitpl.svg
@@ -81,8 +81,8 @@ Routes for all page URI should be set in `Route()` call after that.
 You can enable per request templates parsing for debugging purposes via `ParseAlways(true)` but you still have to restart your program for adding or removing any template file.
 
 ### See also
-* [Package examples](https://godoc.org/github.com/apisite/apitpl#pkg-examples)
-* [ginapitpl](https://github.com/apisite/apitpl/ginapitpl) - [gin](https://github.com/gin-gonic/gin) bindings for this package
+* [Package examples](https://pkg.go.dev/github.com/apisite/apitpl#pkg-examples)
+* [ginapitpl](https://pkg.go.dev/github.com/apisite/apitpl/ginapitpl) - [gin](https://github.com/gin-gonic/gin) bindings for this package
 
 ### Template methods
 Get http.Request data

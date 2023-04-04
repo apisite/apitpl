@@ -18,8 +18,8 @@
 
 [cc1]: https://codecov.io/gh/apisite/apitpl/branch/master/graph/badge.svg
 [cc2]: https://codecov.io/gh/apisite/apitpl
-[gd1]: https://godoc.org/github.com/apisite/apitpl?status.svg
-[gd2]: https://godoc.org/github.com/apisite/apitpl
+[gd1]: https://pkg.go.dev/badge/github.com/apisite/apitpl
+[gd2]: https://pkg.go.dev/github.com/apisite/apitpl?
 [gc1]: https://goreportcard.com/badge/github.com/apisite/apitpl
 [gc2]: https://goreportcard.com/report/github.com/apisite/apitpl
 [gr1]: https://img.shields.io/github/release-pre/apisite/apitpl.svg
@@ -59,21 +59,20 @@ _Примечания._
 * разделение шаблонов по типам на основе префикса или суффикса имени файла
 * поддержка работы с шаблонами из встроенной файловой системы
 * рендеринг страниц и макетов с использованием инклюдов, с однократным парсингом или парсингом по запросу (флаг `ParseAlways(true)`)
-* [роутинг для net/http](https://godoc.org/github.com/apisite/apitpl#example-package--Http) и [роутинг для gin-gonic/gin](https://godoc.org/github.com/apisite/apitpl/ginapitpl#example-package)
+* [роутинг для net/http](https://pkg.go.dev/github.com/apisite/apitpl#example-package--Http) и [роутинг для gin-gonic/gin](https://pkg.go.dev/github.com/apisite/apitpl/ginapitpl#example-package)
 
 ## Структура
 
 Библиотека разделена на следующие части:
 
-* [apitpl](https://godoc.org/github.com/apisite/apitpl) - код формирования страницы из шаблона (выполняется в два этапа - формирование контента и сборка страницы по макеты с включением в него контента)
-* [lookupfs](https://godoc.org/github.com/apisite/apitpl/lookupfs) - получение из файловой системы (обычной или встроенной) списков шаблонов
-* [samplemeta](https://godoc.org/github.com/apisite/apitpl/samplemeta) - пример метаданных, которые могут передаваться из шаблона контента в шаблон макета
-* [samplefs](https://godoc.org/github.com/apisite/apitpl/samplefs) - встроенная файловая система для сокращения кода примеров, используется только в `example_*_test.go` 
-* [ginapitpl](https://godoc.org/github.com/apisite/apitpl/ginapitpl) - интеграция функционала apitpl в [gin](https://github.com/gin-gonic/gin) (код оформлен модулем, чтобы его зависимости не попали в остальные части), для тестов и примеров этот модуль имеет свои копии [samplemeta](https://godoc.org/github.com/apisite/apitpl/ginapitpl/samplemeta) и [samplefs](https://godoc.org/github.com/apisite/apitpl/ginapitpl/samplefs)
+* [apitpl](https://pkg.go.dev/github.com/apisite/apitpl) - код формирования страницы из шаблона (выполняется в два этапа - формирование контента и сборка страницы по макеты с включением в него контента)
+* [lookupfs](https://pkg.go.dev/github.com/apisite/apitpl/lookupfs) - получение из файловой системы (обычной или встроенной) списков шаблонов
+* [samplemeta](https://pkg.go.dev/github.com/apisite/apitpl/samplemeta) - пример метаданных, которые могут передаваться из шаблона контента в шаблон макета
+* [ginapitpl](https://pkg.go.dev/github.com/apisite/apitpl/ginapitpl) - интеграция функционала apitpl в [gin](https://github.com/gin-gonic/gin) (код оформлен модулем, чтобы его зависимости не попали в остальные части), для тестов и примеров этот модуль имеет свои копии [samplemeta](https://pkg.go.dev/github.com/apisite/apitpl/ginapitpl/samplemeta)
 
 ## Особенности реализации
 
-### apitpl 
+### apitpl
 
 Формирование страницы из шаблона выполняется в два шага:
 1. формирование контента 
@@ -92,7 +91,7 @@ _Примечания._
 Получение списка файлов для каждого из трех типов шаблонов имеет следующие особенности:
 
 * разделение на типы может производиться по префиксу (например, `ROOT/(pages|layouts|includes)/...`) или по суффиксу (например, `ROOT/PATH/name(|.layout|.include).tmpl`)
-* доступ к файлам производится через интерфейс [lookupfs.FileSystem](https://godoc.org/github.com/apisite/apitpl/lookupfs#FileSystem) и поддерживается работа как с обычной так и со встроенной файловой системой
+* доступ к файлам производится через интерфейс [lookupfs.FileSystem](https://pkg.go.dev/github.com/apisite/apitpl/lookupfs#FileSystem) и поддерживается работа как с обычной так и со встроенной файловой системой
 
 По имени файла шаблона формируется имя, по которому на него можно ссылаться директивой `{{template}}` и использовать в роутинге HTTP-сервера. Для этого с именем файла производятся действия:
 
@@ -106,13 +105,13 @@ _Примечания._
 
 См. также:
 
-* [Примеры с разделением по префиксу и суффиксу](https://godoc.org/github.com/apisite/apitpl/lookupfs#pkg-examples)
+* [Примеры с разделением по префиксу и суффиксу](https://pkg.go.dev/github.com/apisite/apitpl/lookupfs#pkg-examples)
 * [Пример работы с обычной ФС](https://github.com/apisite/apitpl/blob/master/apitpl_test.go)
-* [Пример работы с встроенной ФС](https://godoc.org/github.com/apisite/apitpl#example-package--Execute)
+* [Пример работы с встроенной ФС](https://pkg.go.dev/github.com/apisite/apitpl#example-package--Execute)
 
 ### samplemeta
 
-При формировании контента может быть создан не только он сам (т.е., фактически, тестовая строка), но и некоторые метаданные (например, заголовок страницы, имя макета, список JS-файлов для включения и т.п). Для передачи этой информации из страницы в макет используется объект структуры, соответствующей интерфейсу [apitpl.MetaData](https://godoc.org/github.com/apisite/apitpl#MetaData). Этот объект создается при каждом запросе страницы и интерфейс содержит только три метода:
+При формировании контента может быть создан не только он сам (т.е., фактически, тестовая строка), но и некоторые метаданные (например, заголовок страницы, имя макета, список JS-файлов для включения и т.п). Для передачи этой информации из страницы в макет используется объект структуры, соответствующей интерфейсу [apitpl.MetaData](https://pkg.go.dev/github.com/apisite/apitpl#MetaData). Этот объект создается при каждом запросе страницы и интерфейс содержит только три метода:
 
 * `SetError(error)` - вызывается внутри apitpl при возникновении необработаннной ошибки выполнения шаблона страницы
 * `Error() error` - позволяет получить эту ошибку
@@ -120,7 +119,7 @@ _Примечания._
 
 Библиотека содержит базовый пример такой структуры - [samplemeta](https://github.com/apisite/apitpl/blob/master/samplemeta/meta.go).
 
-В [ginapitpl](https://godoc.org/github.com/apisite/apitpl/ginapitpl) интерфейс [ginapitpl.MetaData](https://godoc.org/github.com/apisite/apitpl/ginapitpl#MetaData) дополнен функциями для формирования заголовка HTTP-ответа:
+В [ginapitpl](https://pkg.go.dev/github.com/apisite/apitpl/ginapitpl) интерфейс [ginapitpl.MetaData](https://pkg.go.dev/github.com/apisite/apitpl/ginapitpl#MetaData) дополнен функциями для формирования заголовка HTTP-ответа:
 
 * `Status() int` - статус
 * `ContentType() string` - тип контента
