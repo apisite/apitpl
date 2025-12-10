@@ -163,7 +163,7 @@ func (tfs TemplateService) parseTemplateWithDeps(items map[string]lookupfs.File,
 	}
 	f, ok := items[name]
 	if !ok {
-		err := fmt.Errorf("The page %s does not exist.", name)
+		err := fmt.Errorf("page %s does not exists", name)
 		return nil, err
 	}
 	return tfs.parseTemplate(includes, name, f)
@@ -195,7 +195,7 @@ func (tfs TemplateService) RenderContent(name string, funcs template.FuncMap, da
 		var ok bool
 		tmpl, ok = tfs.pages[name] // TODO: tfs.Lookup(tfs.pages, name)
 		if !ok {
-			err = fmt.Errorf("The page %s does not exist.", name)
+			err = fmt.Errorf("page %s does not exists", name)
 			data.SetError(err)
 			return nil
 		}

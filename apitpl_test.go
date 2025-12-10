@@ -58,7 +58,7 @@ func (ss *ServerSuite) TestPageNotExists() {
 	var b bytes.Buffer
 	err := ss.srv.Execute(&b, "page_unknown", template.FuncMap{}, page)
 	require.NoError(ss.T(), err)
-	assert.Equal(ss.T(), "<title>Error 0: Sorry</title>\nThe page page_unknown does not exist.\n", b.String())
+	assert.Equal(ss.T(), "<title>Error 0: Sorry</title>\npage page_unknown does not exists\n", b.String())
 }
 func (ss *ServerSuite) TestLayoutNotExists() {
 	page := &samplemeta.Meta{}
